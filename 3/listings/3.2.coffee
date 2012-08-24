@@ -1,6 +1,6 @@
 # CoffeeScript
 
-count_words = (s, del) ->
+countWords = (s, del) ->
   if s
     words = s.split del
     words.length
@@ -9,7 +9,7 @@ count_words = (s, del) ->
 
 ### JavaScript
 
-var count_words = function (s, del) {
+var countWords = function (s, del) {
   var words;
   if (s) {
     words = s.split(del);
