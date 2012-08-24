@@ -76,10 +76,6 @@ describe "chapter 2", ->
     (makeCoffee()).shouldBe 'Espresso'
     makeCoffee('Cappuccino').shouldBe 'Cappuccino'
 
-  it "should new a Date", ->
-    new Date()
-    # Sun, 21 Aug 2011 00:14:34 GMT
-
   it "should access object properties", ->
     texasRanger = {actor: 'Chuck Norris'}
     texasRanger.actor.shouldBe 'Chuck Norris'
@@ -87,9 +83,6 @@ describe "chapter 2", ->
     movie = {title: 'Way of the Dragon', star: 'Bruce Lee'}
     myPropertyName = 'title'
     movie[myPropertyName].shouldBe 'Way of the Dragon'
-
-  #it "should", ->
-    # now.getHours()
 
   it "should evaluate to 'object' for typeof null", ->
     (typeof null).shouldBe 'object'
