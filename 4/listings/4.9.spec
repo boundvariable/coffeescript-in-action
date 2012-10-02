@@ -16,7 +16,7 @@ personalHit =
   path: '/personal/a',
   method: 'GET'
 
-for hit in [1..7]
+for hit in Array 7
   request = http.get businessHit
   request.on 'error', (e) -> console.log e
 
@@ -36,7 +36,7 @@ request = http.get indexHit, (response) ->
 
   response.on 'end', ->
     describe 'listing 4.9', ->
-      it 'should serve number of views on /', ->
+      it 'should serve number of views', ->
         /Personal: 2/.test(result).shouldBe true
         /Business: 7/.test(result).shouldBe true
         server.close()

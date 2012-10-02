@@ -1,0 +1,11 @@
+{
+  "Fuji-X100": {
+    "description": "a camera",
+    "stock":5
+  },
+  "Perall Powalta": {
+    "description": "a skateboard",
+    "stock":6,
+    "special": "two for one"
+  }
+}
