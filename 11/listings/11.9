@@ -1,0 +1,31 @@
+#!/usr/bin/env coffee                   #A
+
+coffee = require 'coffee-script'
+fs = require 'fs'
+
+SPEC_PATH = './spec/'     #B
+SRC_PATH = './src/'       #B
+
+test = (file) ->
+  fs.readFile SPEC_PATH + file, 'utf-8', (err, data) ->
+    it = """
+      {fact, report} = require '../fact'
+      assert = require 'assert'
+      #{data}
+    """
+    coffee.run it, filename: SPEC_PATH + file       #C
+
+spec = (file) ->
+  if /#/.test file then false
+  else /\.spec\.coffee$/.test file
+
+tests = ->
+  fs.readdir SPEC_PATH, (err, files) ->
+    for file in files
+      test file if spec file
+
+fs.watch SPEC_PATH, (event, filename) ->    #D
+  tests()                                   #D
+
+fs.watch SRC_PATH, (event, filename) ->     #D
+  tests()                                   #D
