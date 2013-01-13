@@ -2,7 +2,7 @@ fs = require 'fs'
 {EventEmitter} = require 'events'
 
 with_events = (emitter, event) ->
-    pipeline = []
+  pipeline = []
   data = []
 
   reset = ->        #A

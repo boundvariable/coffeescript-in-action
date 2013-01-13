@@ -1,40 +1,39 @@
 with_events = (emitter, event) ->
-    pipeline = []
+  pipeline = []
   data = []
 
-  reset = ->
-      pipeline = []
+  reset = ->  pipeline = []
 
   reset()
 
   run = ->
-      result = data
+    result = data
     for processor in pipeline
-        if processor.filter?
-            mapped = result.filter processor.filter
-        else if processor.map?
-          result = result.map processor.map
+      if processor.filter?
+        mapped = result.filter processor.filter
+      else if processor.map?
+        result = result.map processor.map
       result
 
   emitter.on event, (datum) ->
-      data.push datum
+    data.push datum
 
   interface =
     filter: (filter) ->
-        pipeline.push {filter: filter}
-        @
-      map: (map) ->
-        pipeline.push {map: map}
-        @
-      drain: (fn) ->                   #A
+      pipeline.push {filter: filter}
+      @
+    map: (map) ->
+      pipeline.push {map: map}
+      @
+    drain: (fn) ->                   #A
       emitter.on event, (datum) ->   #A
         result = run()               #A
-          data = []                    #A
-          fn result                    #A
-      evaluate: ->
-        result = run()
-        reset()
-        result
+        data = []                    #A
+        fn result                    #A
+    evaluate: ->
+      result = run()
+      reset()
+      result
 
   interface
 
