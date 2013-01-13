@@ -13,12 +13,9 @@ requestTopicData = (http, topic, callback) ->
   ).on 'error', (e) ->
     console.log e
 
-
-
 expected =
   a: 'a'
   b: 'b'
-
 
 originalRequestTopicData = requestTopicData
 

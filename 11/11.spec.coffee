@@ -24,11 +24,11 @@ describe 'Chapter 11', ->
     require './word_utils.spec'
 
   it 'should test word utils addword', ->
-    addWord = require('./word_utils').addWord
+    {addWord} = require './word_utils'
 
     addWord('product special', 'popular').shouldBe 'product special popular'
 
-  describe 'remove_word', ->
+  describe 'removeWord', ->
     tests = [
         initial: "product special"
         replace: "special"

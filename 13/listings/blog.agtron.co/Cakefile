@@ -1,0 +1,49 @@
+
+fs = require 'fs'
+{exec, execFile} = require 'child_process'
+
+{ clean, compile, copy, create_artifact, run_specs, run_app } = require './build_utilities'  #A
+
+VERSION = fs.readFileSync('./VERSION', 'utf-8')   #B
+
+task 'clean', 'delete existing build', ->     #C
+  clean "compiled"                            #C
+
+task 'build', 'run the build', ->                 #D
+  clean 'compiled', ->                            #D
+    compile 'app', ->                             #D
+      copy 'content', 'compiled', ->              #D
+        create_artifact 'compiled', VERSION, ->   #D
+          console.log 'Build complete'            #D
+
+task 'test' , 'run the tests', ->             #E
+  clean 'compiled', ->                        #E
+    compile 'app', ->                         #E
+      compile 'spec', ->                      #E
+        run_specs 'compiled', ->              #E
+          console.log 'Tests complete'        #E
+
+task "development:start", "start on development", ->              #F
+  run_app 'development'
+
+SERVER = require('./app/config').production.host
+
+deploy = ->
+  console.log "Deploy..."
+  execFile "tar", ["-cvf", "artifact.#{VERSION}.tar", "compiled"], (err, data) ->
+    console.log '1. Created artifact'
+    execFile 'scp', [
+      "artifact.#{VERSION}.tar",
+      "#{SERVER}:~/."
+    ], (err, data) ->
+      console.log '2. Uploaded artifact'
+      exec "ssh #{SERVER} 'cd ~/;rm -rf compiled;tar -xvf artifact.#{VERSION}.tar;cd ~/compiled;NODE_ENV=production node app/server.js &' &", (err, data) ->
+        console.log '3. Started server'
+        console.log 'Done'
+
+task "production:deploy", "deploys the app to production", ->
+  clean 'compiled', ->
+    compile 'app', ->
+      copy 'content', 'compiled', ->
+        create_artifact 'compiled', VERSION, ->
+          deploy()
