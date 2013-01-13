@@ -41,7 +41,7 @@ class CSVRowEmitter extends EventEmitter        #E
       /[^,]+,[^,]+,[^,]+/.test row
 
   constructor: (source) ->
-      @remainder = ''
+    @remainder = ''
     @numbers = []
     stream = fs.createReadStream source, {flags: 'r', encoding: 'utf-8'}
     stream.on 'data', (data) =>
@@ -60,41 +60,41 @@ class CSVRowEmitter extends EventEmitter        #E
 
 class PhoneBook                                    #F
   as_object = (row) ->
-      [name, number, relationship] = row.split ','
+    [name, number, relationship] = row.split ','
     { name, number, relationship }
 
   as_string = (data) ->
-      "#{data.name}: #{data.number} (#{data.relationship})"
+    "#{data.name}: #{data.number} (#{data.relationship})"
 
   print = (s) ->
-      s.join '\n'
+    s.join '\n'
 
   relationship_is = (relationship) ->
-      (data) -> data.relationship is relationship
+    (data) -> data.relationship is relationship
 
   name_is = (name) ->
-      (data) -> data.name is name
+    (data) -> data.name is name
 
   constructor: (source_csv) ->
-      csv = new CSVRowEmitter source_csv
+    csv = new CSVRowEmitter source_csv
     @numbers = with_events(csv, 'row')
 
   list: (relationship) ->
-      evaluated = \
+    evaluated = \
     if relationship
-      numbers                                  #G
+      @numbers                                 #G
       .map(as_object)                          #G
       .filter(relationship_is relationship)    #G
       .evaluate()                              #G
     else
-      numbers                                  #G
+      @numbers                                 #G
       .map(as_object)                          #G
       .evaluate()                              #G
 
     print(as_string data for data in evaluated)
 
   get: (name) ->
-      evaluated = \
+    evaluated = \
     @numbers                                   #G
     .map(as_object)                            #G
     .filter(name_is name)                      #G
