@@ -7,8 +7,8 @@ decorate_sort_undecorate = (array, sort_rule) ->
 
   comparator = (left,right) ->          #3
     if left.sort_on > right.sort_on     #3
-        1                                 #3
-      else                                #3
+      1                                 #3
+    else                                #3
       -1                                #3
 
   decorated = decorate array             #4
