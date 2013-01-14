@@ -14,7 +14,7 @@ withEvents = (emitter, event) ->
     result = data                                 #B
     for processor in pipeline                     #B
       if processor.filter?                        #B
-        mapped = result.filter processor.filter   #B
+        result = result.filter processor.filter   #B
       else if processor.map?                      #B
         result = result.map processor.map         #B
     result                                        #B
@@ -45,7 +45,7 @@ class CSVRowEmitter extends EventEmitter        #E
     @numbers = []
     stream = fs.createReadStream source, {flags: 'r', encoding: 'utf-8'}
     stream.on 'data', (data) =>
-        chunk = data.split /\n/
+      chunk = data.split /\n/
       firstRow = chunk[0]
       lastRow = chunk[chunk.length-1]
       if not valid firstRow and @remainder
