@@ -22,18 +22,16 @@ withEvents = (emitter, event) ->
   emitter.on event, (datum) ->   #C
     data.push datum              #C
 
-  interface =                           #D
-    filter: (filter) ->                 #D
-      pipeline.push {filter: filter}    #D
-      @                                 #D
-    map: (map) ->                       #D
-      pipeline.push {map: map}          #D
-      @                                 #D
-    evaluate: ->                        #D
-      result = run()                    #D
-      reset()                           #D
-      result                            #D
-  interface                             #D
+  filter: (filter) ->                 #D
+    pipeline.push {filter: filter}    #D
+    @                                 #D
+  map: (map) ->                       #D
+    pipeline.push {map: map}          #D
+    @                                 #D
+  evaluate: ->                        #D
+    result = run()                    #D
+    reset()                           #D
+    result                            #D
 
 class CSVRowEmitter extends EventEmitter        #E
 

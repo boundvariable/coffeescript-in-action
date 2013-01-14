@@ -18,22 +18,21 @@ withEvents = (emitter, event) ->
   emitter.on event, (datum) ->
     data.push datum
 
-  interface =
-    filter: (filter) ->
-      pipeline.push {filter: filter}
-      @
-    map: (map) ->
-      pipeline.push {map: map}
-      @
-    drain: (fn) ->                   #A
-      emitter.on event, (datum) ->   #A
-        result = run()               #A
-        data = []                    #A
-        fn result                    #A
-    evaluate: ->
-      result = run()
-      reset()
-      result
+  filter: (filter) ->
+    pipeline.push {filter: filter}
+    @
+  map: (map) ->
+    pipeline.push {map: map}
+    @
+  drain: (fn) ->                   #A
+    emitter.on event, (datum) ->   #A
+      result = run()               #A
+      data = []                    #A
+      fn result                    #A
+  evaluate: ->
+    result = run()
+    reset()
+    result
 
   interface
 
@@ -51,7 +50,7 @@ doc =                                      #C
 
 class Paddle
   constructor: (@top=0, @left=0) ->
-      @render()
+    @render()
 
   move: (displacement) ->              #D
     @top += displacement*5             #D
@@ -69,20 +68,20 @@ class Paddle
     document.querySelector('#pong').appendChild @paddle     #E
 
 displacement = ([up,down]) ->
-    (event) ->
-      switch event.keyCode
-      when up then -1
-      when down then 1
-      else 0
+  (event) ->
+    switch event.keyCode
+    when up then -1
+    when down then 1
+    else 0
 
 move = (paddle) ->
-    (moves) ->
-      for displacement in moves
-        paddle.move displacement
+  (moves) ->
+    for displacement in moves
+      paddle.move displacement
 
 keys = (expected) ->
-    (pressed) ->
-      pressed.keyCode in expected
+  (pressed) ->
+    pressed.keyCode in expected
 
 paddle1 = new Paddle 0,0      #F
 paddle1.keys = [Q,A]          #F

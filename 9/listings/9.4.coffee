@@ -18,10 +18,10 @@ class CompetitorsEmitter extends EventEmitter
     /^[0-9]+:\s[a-zA-Z],\s[a-zA-Z]\n/.test string    #A
 
   lines = (data) ->                 #B
-    lines = data.split /\n/         #B
+    chunk = data.split /\n/         #B
     first = chunk[0]                #B
     last = chunk[chunk.length-1]    #B
-    {lines, first, last}            #B
+    {chunk, first, last}            #B
 
   insertionSort = (array, items) ->                              #C
     insertAt = 0                                                 #C
@@ -30,19 +30,19 @@ class CompetitorsEmitter extends EventEmitter
       for existing in array                                      #C
         if toInsert.lastName > existing.lastName                 #C
           insertAt++                                             #C
-      @competitors.splice insertAt, 0, toInsert                  #C
+      array.splice insertAt, 0, toInsert                         #C
 
   constructor: (source) ->                                                #D
     @competitors = []                                                     #D
     stream = fs.createReadStream source, {flags: 'r', encoding: 'utf-8'}  #D
     stream.on 'data', (data) =>                                           #D
-      {lines, first, last} = lines()                                      #D
+      {chunk, first, last} = lines data                                   #D
       if not validCompetitor last                                         #D
         @remainder = last                                                 #D
-        lines.pop()                                                       #D
+        chunk.pop()                                                       #D
       if not validCompetitor first                                        #D
-        lines[0] = @remainder + first                                     #D
-      insertionSort @competitors, lines                                   #D
+        chunk[0] = @remainder + first                                     #D
+      insertionSort @competitors, chunk                                   #D
       @emit 'data', @competitors                                          #D
 
 
@@ -52,6 +52,6 @@ competitors.on 'data', (competitors) ->
 
 start = new Date()
 setInterval ->
-    now = new Date()
+  now = new Date()
   console.log "Tick at #{(now - start)/ONE_SECOND}"
 , ONE_SECOND/10
