@@ -1,55 +1,53 @@
 fs = require 'fs'
 http = require 'http'
 
-read_file = (file, strategy) ->
+readFile = (file, strategy) ->
   fs.readFile file, 'utf-8', (error, response) ->
     throw error if error
     strategy response
 
-read_file_as_array = (file, delimiter, callback) ->  #A
-  as_array = (data) ->                               #A
+readFileAsArray = (file, delimiter, callback) ->     #A
+  asArray = (data) ->                                #A
     callback data.split(delimiter).slice(0,-1)       #A
-  read_file(file, as_array)                          #A
+  readFile(file, asArray)                            #A
 
-compare_on_last_name = (a,b) ->                #B
-  last_name = (s) ->                           #B
+compareOnLastName = (a,b) ->                   #B
+  lastName = (s) ->                            #B
     s.split(/\s+/g)[1].replace /,/, ','        #B
   if !a or !b                                  #B
     1                                          #B
-  else if last_name(a) >= last_name(b)         #B
+  else if lastName(a) >= lastName(b)           #B
     1                                          #B
   else                                         #B
     -1                                         #B
 
-sorted_competitors_from_file = (file_name, callback) ->   #C
+sortedCompetitorsFromFile = (fileName, callback) ->       #C
   newline = /\n/gi                                        #C
-  read_file_as_array file_name, newline, (array) ->       #C
-    callback array.sort(compare_on_last_name)             #C
+  readFileAsArray fileName, newline, (array) ->           #C
+    callback array.sort(compareOnLastName)                #C
 
-make_server = ->                                            #D
-  response_data = ''                                        #D
-  server = http.createServer (request, response) ->         #D 
+makeServer = ->                                             #D
+  responseData = ''                                         #D
+  server = http.createServer (request, response) ->         #D
     response.writeHead 200, 'Content-Type': 'text/html'     #D
-    response.end JSON.stringify response_data               #D
+    response.end JSON.stringify responseData                #D
   server.listen 8888, '127.0.0.1'                           #D
   (data) ->                                                 #D
-    response_data = data                                    #D
+    responseData = data                                     #D
 
-main = (file_name) ->
-  server = make_server()
+main = (fileName) ->
+  server = makeServer()
 
-  load_data = ->
+  loadData = ->
     start = new Date()
     console.log 'Loading data'
-    sorted_competitors_from_file file_name, (data) ->
+    sortedCompetitorsFromFile fileName, (data) ->
       elapsed = new Date() - start
       console.log "Data loaded in #{elapsed/1000} seconds"
-      server data                                        
+      server data
 
-
-  load_data()                                            #E
-
-  fs.watchFile file_name, load_data                      #E
+  loadData()                                            #E
+  fs.watchFile fileName, loadData                       #E
 
 if process.argv[2]                                  #F
   main process.argv[2]                              #F

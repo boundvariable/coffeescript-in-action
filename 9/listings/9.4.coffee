@@ -3,7 +3,7 @@ fs = require 'fs'
 
 ONE_SECOND = 1000
 
-last_name = (s) ->
+lastName = (s) ->
   try
     s.split(/\s+/g)[1].replace /,/, ','
   catch e
@@ -14,7 +14,7 @@ undecorate = (array) ->
 
 class CompetitorsEmitter extends EventEmitter
 
-  valid_competitor = (string) ->                     #A
+  validCompetitor = (string) ->                      #A
     /^[0-9]+:\s[a-zA-Z],\s[a-zA-Z]\n/.test string    #A
 
   lines = (data) ->                 #B
@@ -23,26 +23,26 @@ class CompetitorsEmitter extends EventEmitter
     last = chunk[chunk.length-1]    #B
     {lines, first, last}            #B
 
-  insertion_sort = (array, items) ->                             #C
-    insert_at = 0                                                #C
+  insertionSort = (array, items) ->                              #C
+    insertAt = 0                                                 #C
     for item in items                                            #C
-      to_insert = { original: item, sort_on: last_name(item) }   #C
+      toInsert = original: item, sortOn: lastName(item)          #C
       for existing in array                                      #C
-        if to_insert.last_name > existing.last_name              #C
-          insert_at++                                            #C
-      @competitors.splice insert_at, 0, to_insert                #C
+        if toInsert.lastName > existing.lastName                 #C
+          insertAt++                                             #C
+      @competitors.splice insertAt, 0, toInsert                  #C
 
   constructor: (source) ->                                                #D
     @competitors = []                                                     #D
     stream = fs.createReadStream source, {flags: 'r', encoding: 'utf-8'}  #D
     stream.on 'data', (data) =>                                           #D
       {lines, first, last} = lines()                                      #D
-      if not valid_competitor last                                        #D
+      if not validCompetitor last                                         #D
         @remainder = last                                                 #D
         lines.pop()                                                       #D
-      if not valid_competitor first                                       #D
+      if not validCompetitor first                                        #D
         lines[0] = @remainder + first                                     #D
-      insertion_sort @competitors, lines                                  #D
+      insertionSort @competitors, lines                                   #D
       @emit 'data', @competitors                                          #D
 
 

@@ -1,66 +1,65 @@
 fs = require 'fs'
 http = require 'http'
 
-read_file = (file, strategy) ->
+readFile = (file, strategy) ->
   fs.readFile file, 'utf-8', (error, response) ->
     throw error if error
     strategy response
 
-read_file_as_array = (file, delimiter, callback) -> 
-  as_array = (data) ->                              
-    callback data.split(delimiter).slice(0,-1)       
-  read_file(file, as_array)                         
+readFileAsArray = (file, delimiter, callback) ->
+  asArray = (data) ->
+    callback data.split(delimiter).slice(0,-1)
+  readFile(file, asArray)
 
-last_name = (s) ->                          
-  s.split(/\s+/g)[1].replace /,/, ','                                  
+lastName = (s) ->
+  s.split(/\s+/g)[1].replace /,/, ','
 
-decorate_sort_undecorate = (array, sort_rule) ->
-  decorate = (array) -> 
-    {original: item, sort_on: sort_rule item} for item in array
+decorateSortUndecorate = (array, sort_rule) ->
+  decorate = (array) ->
+    {original: item, sortOn: sortRule item} for item in array
 
-  undecorate = (array) ->                
-    item.original for item in array      
+  undecorate = (array) ->
+    item.original for item in array
 
-  comparator = (left, right) ->         
-    if left.sort_on > right.sort_on    
-      1                                
-    else                                
-      -1                                
+  comparator = (left, right) ->
+    if left.sortOn > right.sortOn
+      1
+    else
+      -1
 
   decorated = decorate array
   sorted = decorated.sort comparator
-  undecorate sorted                     
+  undecorate sorted
 
 
-sorted_competitors_from_file = (file_name, callback) ->  
-  newline = /\n/gi                                       
-  read_file_as_array file_name, newline, (array) ->      
-    callback decorate_sort_undecorate(array, last_name)            
+sortedCompetitorsFromFile = (fileName, callback) ->
+  newline = /\n/gi
+  readFileAsArray fileName, newline, (array) ->
+    callback decorateSortUndecorate(array, lastName)
 
-make_server = ->                                           
-  response_data = ''                                       
-  server = http.createServer (request, response) ->       
-    response.writeHead 200, 'Content-Type': 'text/html'     
-    response.end JSON.stringify response_data               
-  server.listen 8888, '127.0.0.1'                           
-  (data) ->                                                 
-    response_data = data                                    
+makeServer = ->
+  responseData = ''
+  server = http.createServer (request, response) ->
+    response.writeHead 200, 'Content-Type': 'text/html'
+    response.end JSON.stringify responseData
+  server.listen 8888, '127.0.0.1'
+  (data) ->
+    responseData = data
 
-main = (file_name) ->
-  server = make_server()
+main = (fileName) ->
+  server = makeServer()
 
-  load_data = ->
+  loadData = ->
     start = new Date()
     console.log 'Loading data'
-    sorted_competitors_from_file file_name, (data) ->
+    sortedCompetitorsFromFile fileName, (data) ->
       elapsed = new Date() - start
       console.log "Data loaded in #{elapsed/1000} seconds"
-      server data                                        
+      server data
 
 
-  load_data()                                            #E
-
-  fs.watchFile file_name, load_data                      #E
+  loadData()
+  fs.watchFile fileName, loadData
 
 
 start = new Date()
@@ -69,9 +68,9 @@ setInterval ->
 , 1000
 
 
-if process.argv[2]                                  #F
-  main process.argv[2]                              #F
-  console.log "Starting server on port 8888"        #F
-else                                                #F
-  console.log "usage: coffee 9.1.coffee [file]"     #F
+if process.argv[2]
+  main process.argv[2]
+  console.log "Starting server on port 8888"
+else
+  console.log "usage: coffee 9.1.coffee [file]"
 

@@ -1,55 +1,53 @@
 fs = require 'fs'
 http = require 'http'
 
-read_file = (file, strategy) ->
+readFile = (file, strategy) ->
   fs.readFile file, 'utf-8', (error, response) ->
     throw error if error
     strategy response
 
-read_file_as_array = (file, delimiter, callback) ->  #A
-  as_array = (data) ->                               #A
-    callback data.split(delimiter).slice(0,-1)       #A
-  read_file(file, as_array)                          #A
+readFileAsArray = (file, delimiter, callback) ->
+  asArray = (data) ->
+    callback data.split(delimiter).slice(0,-1)
+  readFile(file, asArray)
 
-compare_on_last_name = (a,b) ->                #B
-  last_name = (s) ->                           #B
-    s.split(/\s+/g)[1].replace /,/, ','        #B
-  if !a or !b                                  #B
-    1                                          #B
-  else if last_name(a) >= last_name(b)         #B
-    1                                          #B
-  else                                         #B
-    -1                                         #B
+compareOnLastName = (a,b) ->
+  lastName = (s) ->
+    s.split(/\s+/g)[1].replace /,/, ','
+  if !a or !b
+    1
+  else if lastName(a) >= lastName(b)
+    1
+  else
+    -1
 
-sorted_competitors_from_file = (file_name, callback) ->   #C
-  newline = /\n/gi                                        #C
-  read_file_as_array file_name, newline, (array) ->       #C
-    callback array.sort(compare_on_last_name)             #C
+sortedCompetitorsFromFile = (fileName, callback) ->
+  newline = /\n/gi
+  readFileAsArray fileName, newline, (array) ->
+    callback array.sort(compareOnLastName)
 
-make_server = ->                                            #D
-  response_data = ''                                        #D
-  server = http.createServer (request, response) ->         #D
-    response.writeHead 200, 'Content-Type': 'text/html'     #D
-    response.end JSON.stringify response_data               #D
-  server.listen 8888, '127.0.0.1'                           #D
-  (data) ->                                                 #D
-    response_data = data                                    #D
+makeServer = ->
+  responseData = ''
+  server = http.createServer (request, response) ->
+    response.writeHead 200, 'Content-Type': 'text/html'
+    response.end JSON.stringify responseData
+  server.listen 8888, '127.0.0.1'
+  (data) ->
+    responseData = data
 
-main = (file_name) ->
-  server = make_server()
+main = (fileName) ->
+  server = makeServer()
 
-  load_data = ->                                         #E
+  loadData = ->
     console.log 'Loading data'
-    sorted_competitors_from_file file_name, (data) ->    #E
+    sortedCompetitorsFromFile fileName, (data) ->
       console.log 'Data loaded'
-      server data                                        #E
+      server data
+  loadData()
+  fs.watchFile fileName, loadData
 
-  load_data()                                            #E
-
-  fs.watchFile file_name, load_data                      #E
-
-if process.argv[2]                                  #F
-  main process.argv[2]                              #F
-  console.log "Starting server on port 8888"        #F
-else                                                #F
-  console.log "usage: coffee 9.1.coffee [file]"     #F
+if process.argv[2]
+  main process.argv[2]
+  console.log "Starting server on port 8888"
+else
+  console.log "usage: coffee 9.1.coffee [file]"
