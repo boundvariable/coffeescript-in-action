@@ -1,4 +1,4 @@
-with_events = (emitter, event) ->
+withEvents = (emitter, event) ->
   pipeline = []
   data = []
 
@@ -50,7 +50,6 @@ doc =                                      #C
       fn e                                 #C
 
 class Paddle
-
   constructor: (@top=0, @left=0) ->
       @render()
 
@@ -91,12 +90,12 @@ paddle1.keys = [Q,A]          #F
 paddle2 = new Paddle 0,200    #F
 paddle2.keys = [UP,DOWN]      #F
 
-with_events(doc, 'keydown')         #G
+withEvents(doc, 'keydown')          #G
 .filter(keys paddle1.keys)          #G
 .map(displacement paddle1.keys)     #G
 .drain(move paddle1)                #G
 
-with_events(doc, 'keydown')         #G
+withEvents(doc, 'keydown')          #G
 .filter(keys paddle2.keys)          #G
 .map(displacement paddle2.keys)     #G
 .drain(move paddle2)                #G

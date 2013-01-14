@@ -1,7 +1,7 @@
 fs = require 'fs'
 {EventEmitter} = require 'events'
 
-with_events = (emitter, event) ->
+withEvents = (emitter, event) ->
   pipeline = []
   data = []
 
@@ -46,12 +46,12 @@ class CSVRowEmitter extends EventEmitter        #E
     stream = fs.createReadStream source, {flags: 'r', encoding: 'utf-8'}
     stream.on 'data', (data) =>
         chunk = data.split /\n/
-      first_row = chunk[0]
-      last_row = chunk[chunk.length-1]
-      if not valid first_row and @remainder
-        chunk[0] = @remainder + first_row
-      if not valid last_row
-        @remainder = last_row
+      firstRow = chunk[0]
+      lastRow = chunk[chunk.length-1]
+      if not valid firstRow and @remainder
+        chunk[0] = @remainder + firstRow
+      if not valid lastRow
+        @remainder = lastRow
         chunk.pop()
       else @remainder = ''
 
@@ -59,48 +59,48 @@ class CSVRowEmitter extends EventEmitter        #E
 
 
 class PhoneBook                                    #F
-  as_object = (row) ->
+  asObject = (row) ->
     [name, number, relationship] = row.split ','
     { name, number, relationship }
 
-  as_string = (data) ->
+  asString = (data) ->
     "#{data.name}: #{data.number} (#{data.relationship})"
 
   print = (s) ->
     s.join '\n'
 
-  relationship_is = (relationship) ->
+  relationshipIs = (relationship) ->
     (data) -> data.relationship is relationship
 
-  name_is = (name) ->
+  nameIs = (name) ->
     (data) -> data.name is name
 
-  constructor: (source_csv) ->
-    csv = new CSVRowEmitter source_csv
-    @numbers = with_events(csv, 'row')
+  constructor: (sourceCsv) ->
+    csv = new CSVRowEmitter sourceCsv
+    @numbers = withEvents(csv, 'row')
 
   list: (relationship) ->
     evaluated = \
     if relationship
       @numbers                                 #G
-      .map(as_object)                          #G
-      .filter(relationship_is relationship)    #G
+      .map(asObject)                           #G
+      .filter(relationshipIs relationship)     #G
       .evaluate()                              #G
     else
       @numbers                                 #G
-      .map(as_object)                          #G
+      .map(asObject)                           #G
       .evaluate()                              #G
 
-    print(as_string data for data in evaluated)
+    print(asString data for data in evaluated)
 
   get: (name) ->
     evaluated = \
     @numbers                                   #G
-    .map(as_object)                            #G
-    .filter(name_is name)                      #G
+    .map(asObject)                             #G
+    .filter(nameIs name)                       #G
     .evaluate()                                #G
 
-    print(as_string data for data in evaluated)
+    print(asString data for data in evaluated)
 
 
 
