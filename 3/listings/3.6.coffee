@@ -63,6 +63,6 @@ view = """
 <div id='how-many-attendees'></div>
 <script src='http://code.jquery.com/jquery-1.6.2.js'></script>
 <script>
-#{client_script}
+#{clientScript}
 </script>
 """

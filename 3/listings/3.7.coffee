@@ -55,15 +55,16 @@ exports.init = ->
   setInterval showAttendees, 1000
   '''
 
-  view = """                                                           #11
-  <!doctype html>                                                      #11
-  <title>How many people are coming?</title>                           #11
-  <body>                                                               #11
-  <div id='how-many-attendees'></div>                                  #11
-  <script src='http://code.jquery.com/jquery-1.6.2.js'></script>       #11
-  <script>                                                             #11
-  #{client_script}                                                     #11
-  </script>                                                            #11
+  #11
+  view = """
+  <!doctype html>
+  <title>How many people are coming?</title>
+  <body>
+  <div id='how-many-attendees'></div>
+  <script src='http://code.jquery.com/jquery-1.6.2.js'></script>
+  <script>
+  #{client_script}
+  </script>
   """
 
 
