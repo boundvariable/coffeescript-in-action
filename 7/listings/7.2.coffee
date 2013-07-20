@@ -1,5 +1,5 @@
 
-make_competition = ({max, sort}) ->
+makeCompetition = ({max, sort}) ->
   find = (name) ->
     document.querySelector ".#{name}"
 
@@ -31,11 +31,11 @@ make_competition = ({max, sort}) ->
     highlight first, rest...
 
 
-sort_on_points = (a, b) ->
+sortOnPoints = (a, b) ->
   a.points > b.points
 
 window.onload = ->
-  competition = make_competition(max: 5, sort: sort_on_points)
+  competition = makeCompetition max: 5, sort: sortOnPoints
   competition.initialize [
     { name: 'wolverines', points: 22 }
     { name: 'wildcats', points: 11 }
@@ -44,4 +44,3 @@ window.onload = ->
     { name: 'badgers', points: 19 }
     { name: 'baboons', points: 16 }
   ]
-

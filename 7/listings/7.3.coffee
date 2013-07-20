@@ -1,5 +1,5 @@
 
-make_competition = ({max, sort}) ->
+makeCompetition = ({max, sort}) ->
   render = (team) ->
     """
     <tr class='#{team?.name||''}'>
@@ -38,11 +38,11 @@ make_competition = ({max, sort}) ->
     rest = ranked.slice 1
     highlight first, rest...
 
-sort_on_points = (a, b) ->
+sortOnPoints = (a, b) ->
   a.points > b.points
 
 window.onload = ->
-  competition = make_competition(max:5, sort: sort_on_points)
+  competition = makeCompetition(max:5, sort: sortOnPoints)
   competition.initialize [
       name: 'wolverines'
       points: 56
@@ -65,4 +65,3 @@ window.onload = ->
       name: 'racoons'               # disqualified
       points: 0
   ]
-
