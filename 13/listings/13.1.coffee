@@ -1,23 +1,27 @@
-│                                    #A
-├── app                              #B
-│   ├── controllers                  #C
-│   │   ├── blog.coffee
-│   │   ├── controller.coffee
-│   │   ├── static.coffee
-│   ├── load.coffee
-│   ├── models                       #C
-│   │   ├── model.coffee
-│   │   ├── post.coffee
-│   ├── server.coffee
-│   └── views                        #C
-│       ├── list.coffee
-│       ├── post.coffee
-│       ├── view.coffee
-├── content                          #D
-│   ├── my-trip-to-the-circus.txt
-│   └── my-trip-to-the-zoo.txt
+class Formulaic
+  constructor: (@root, @selector, @http) ->
+    @subscribers = []
+    @fields = @extractFields()
+    @startPolling()
 
-#A The root directory for the project
-#B The application directory
-#C This application has models, views and controllers
-#D The content directory, containing the your blog posts
+  extractFields: ->
+    element = @root.querySelector @selector
+    fields = element.getElementsByTagName 'input'
+    extracted = {}
+    for field in fields
+      extracted[field.name] = field.value
+    extracted
+
+  startPolling: ->
+    diff = =>
+      for own key, value of @extractFields()
+        if @fields[key] isnt value
+          @fields[key] = value
+          @notify()
+    setInterval diff, 100
+
+  subscribe: (subscriber) ->
+    @subscribers.push subscriber
+
+  notify: ->
+    subscriber() for subscriber in @subscribers

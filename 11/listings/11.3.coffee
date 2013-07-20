@@ -1,50 +1,21 @@
-assert = require 'assert'
+{EventEmitter} = require 'events'
+WebSocketServer = (require 'websocket').server       #A
 
-{fact} = require './fact'         #A
-{Tracking} = require './11.4'     #B
+seconds = (n) -> n*1000
 
-fact 'controller responds with 200 header and empty body', ->
-  request =  url: '/some/url'
+emitRandomNumbers = (emitter, event, interval) ->
+  setInterval ->
+    emitter.emit event, Math.floor Math.random()*100
+  , interval
 
-  response =                   #C
-    write: (body) ->           #C
-      @body = body             #C
-    writeHead: (status) ->     #C
-      @status = status         #C
-    end: ->                    #C
-      @ended = true            #C
+source = new EventEmitter
+emitRandomNumbers source, 'update', seconds(4)
 
-  tracking = new Tracking
-  for view in [1..10]
-    tracking.controller request, response
+attachSocketServer = (server) ->                                #B
+  socketServer = new WebSocketServer httpServer: server         #B
+  socketServer.on 'request', (request) ->                       #B
+    connection = request.accept 'graph', request.origin         #B
+    source.on 'update', (data) ->                               #B
+      connection.sendUTF JSON.stringify data                    #B
 
-  assert.equal response.status, 200              #D
-  assert.equal response.body, ''                 #D
-  assert.ok response.ended                       #D
-  assert.equal tracking.pages['/some/url'], 10   #D
-
-
-fact 'increments once for each key', ->
-  tracking = new Tracking                          #E
-  tracking.increment 'a/page' for i in [1..100]    #E
-  tracking.increment 'another/page'                #E
-
-  assert.equal tracking.pages['a/page'], 100  #F
-  assert.equal tracking.total(), 101          #F
-
-fact 'starts and stops server', ->
-  http =                      #G
-    createServer: ->          #G
-      @created = true         #G
-      listen: =>              #G
-        @listening = true     #G
-      close: =>               #G
-        @listening = false    #G
-
-  tracking = new Tracking {}, http    #H
-  tracking.start()                    #H
-
-  assert.ok http.listening            #H
-
-  tracking.stop()                     #H
-  assert.ok not http.listening        #H
+exports.attachSocketServer = attachSocketServer
