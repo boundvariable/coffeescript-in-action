@@ -7,7 +7,7 @@ withCompleteBody = (req, callback) ->
   body = ''
   req.on 'data', (chunk) ->
     body += chunk.toString()
-    request.on 'end', -> callback()
+    request.on 'end', -> callback body
 
 paramsAsObject = (params) ->
   pairs = params.split /&/g
@@ -50,7 +50,7 @@ makeRequestHandler = (load, save) ->
   rendersIfFound = (response) ->
     (error, data) ->
       if error
-        notFound()
+        notFound response
       else
         renderAsJson response, data
 
@@ -61,7 +61,7 @@ makeRequestHandler = (load, save) ->
       withCompleteBody request, ->
         save name, rendersIfFound response
     else
-      notFound()
+      notFound response
 
 numberSold = (salePrice) ->
   50 + 20/10 * (200 - salePrice)

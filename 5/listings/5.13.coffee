@@ -26,6 +26,7 @@ view = """
 <body>
 <script src='/js/client.js'></script>
 </body>
+</html>
 """                                                      #C
 
 server = http.createServer (req, res) ->

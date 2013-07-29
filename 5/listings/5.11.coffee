@@ -1,5 +1,5 @@
 class Mixin
-  include: ->               #A
+  include: (klass) ->       #A
     for key, value of @     #A
       klass::[key] = value  #A
 

@@ -2,21 +2,22 @@ phonebook =
   numbers:                      #A
     hannibal: '555-5551'        #A
     darth: '555-5552'           #A
-    hal9000: 'disconnected'    #A
+    hal9000: 'disconnected'     #A
     freddy: '555-5554'          #A
     'T-800': '555-5555'         #A
   list: ->                                                          #B
-    "#{name}: #{number}" for name, number of @numbers
+    "#{name}: #{number}" for name, number of @numbers               #B
   add: (name, number) ->                                            #B
-    if not (name of @numbers)
-      @numbers[name] = number
+    if not (name of @numbers)                                       #B
+      @numbers[name] = number                                       #B
   get: (name) ->                                                    #B
-    if name of @numbers
-      "#{name}: #{@numbers[name]}"
-    else
-      "#{name} not found"
+    if name of @numbers                                             #B
+      "#{name}: #{@numbers[name]}"                                  #B
+    else                                                            #B
+      "#{name} not found"                                           #B
 
-###
+
+### uncomment this to run from command line
 console.log "Phonebook. Commands are add get list and exit."
 
 process.stdin.setEncoding 'utf8'    #C
