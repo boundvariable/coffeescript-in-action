@@ -1,3 +1,5 @@
+fs = require 'fs'
+
 houseRoast = null
 
 hasMilk = (style) ->
@@ -9,7 +11,6 @@ hasMilk = (style) ->
 
 makeCoffee = (requestedStyle) ->
   style = requestedStyle || 'Espresso'
-  console.log houseRoast
   if houseRoast?
     "#{houseRoast} #{style}"
   else
@@ -22,16 +23,13 @@ barista = (style) ->
     coffee = makeCoffee style
     "Enjoy your #{coffee}!"
 
+main = ->
+  requestedCoffee = process.argv[2]
+  if !requestedCoffee?
+    console.log 'You need to specify an order'
+  else
+    fs.readFile 'house_roast.txt', 'utf-8', (err, data) ->
+      if data then houseRoast = data.replace /\n/, ''
+      console.log barista(requestedCoffee)
 
-###
-Browser Scripting
-###
-
-order = document.querySelector '#order'
-request = document.querySelector '#request'
-response = document.querySelector '#response'
-
-order.onsubmit = ->
-  alert barista(request.value)
-  response.innerHTML = barista(request.value)
-  false
+main()
