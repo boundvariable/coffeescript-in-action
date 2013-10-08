@@ -7,8 +7,8 @@ b, u, i, center,
 dl, dt, dd, ol, ul, li,
 fieldset, form, label, legend,
 table, caption, tbody, tfoot, thead, tr, th, td,
-article, aside, canvas, details, embed, 
-figure, figcaption, footer, header, hgroup, 
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
 menu, nav, output, ruby, section, summary,
 time, mark, audio, video {
     margin: 0;
@@ -19,7 +19,7 @@ time, mark, audio, video {
     vertical-align: baseline;
 }
 /* HTML5 display-role reset for older browsers */
-article, aside, details, figcaption, figure, 
+article, aside, details, figcaption, figure,
 footer, header, hgroup, menu, nav, section {
     display: block;
 }
@@ -42,13 +42,30 @@ table {
     border-spacing: 0;
 }
 
+h1 {
+    font-family: "Andale Mono", AndaleMono, monospace;
+    font-weight: 700;
+    font-size: 3em;
+    margin: 0 0 1em 0;
+}
+
+.page {
+    width: 50em;
+    margin: 1em auto;
+}
+
 .product, .camera, .skateboard {
+    font-family: "Andale Mono", AndaleMono, monospace;
     margin: 1em;
     width: 10em;
-    height:10em;
+    height: 10em;
     text-align:center;
     float:left;
-    border:1px solid #ccc;
     cursor:pointer;
-    line-height:1;
+    line-height:1.4;
+}
+
+.camera {
+    background: url("/images/camera.png") bottom left no-repeat;
+    background-size: 100% auto;
 }

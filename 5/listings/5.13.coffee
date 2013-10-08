@@ -3,7 +3,7 @@ http = require 'http'
 url = require 'url'
 coffee = require 'coffee-script'
 
-data  = require('./data').all  #A
+data  = require('./data').all       #A
 
 
 readClientScript = (callback) ->
@@ -11,7 +11,6 @@ readClientScript = (callback) ->
   fs.readFile script, 'utf-8', (err, data) ->                      #B
     if err then throw err                                          #B
     callback data                                                  #B
-
 
                                                                    #B
 css = ""                                                           #B
@@ -25,11 +24,14 @@ headers = (res, status, type) ->
 view = """
 <!doctype html>
 <head>
-<title>Agtron's Cameras</title>
+<title>Agtron's Emporium</title>
 <link rel='stylesheet' href='/css/client.css' />
 </head>
 <body>
+<div class='page'>
+<h1>----Agtron&#8217;s Emporium----</h1>
 <script src='/js/client.js'></script>
+</div>
 </body>
 </html>
 """                                                      #C
@@ -50,28 +52,37 @@ server = http.createServer (req, res) ->
         status: 'failure'                                               #D
     res.end()                                                           #D
     return                                                              #D
-  switch path                                  #E
-    when '/json/list'                          #E
-      headers res, 200, 'json'                 #E
-      res.end JSON.stringify data              #E
-    when '/json/list/camera'                   #E
-      headers res, 200, 'json'                 #E
-      cameras = data.camera                    #E
-      res.end JSON.stringify data.camera       #E
-    when '/js/client.js'                       #E
-      headers res, 200, 'javascript'           #E
-      writeClientScript = (script) ->          #E
-        res.end coffee.compile(script)         #E
-      readClientScript writeClientScript       #E
-    when '/css/client.css'                     #E
-      headers res, 200, 'css'                  #E
-      res.end css                              #E
-    when '/'                                   #E
-      headers res, 200, 'html'                 #E
-      res.end view                             #E
-    else                                       #E
-      headers res, 404, 'html'                 #E
-      res.end '404'                            #E
+  switch path                                      #E
+    when '/json/list'                              #E
+      headers res, 200, 'json'                     #E
+      res.end JSON.stringify data                  #E
+    when '/json/list/camera'                       #E
+      headers res, 200, 'json'                     #E
+      cameras = data.camera                        #E
+      res.end JSON.stringify data.camera           #E
+    when '/js/client.js'                           #E
+      headers res, 200, 'javascript'               #E
+      writeClientScript = (script) ->              #E
+        res.end coffee.compile(script)             #E
+      readClientScript writeClientScript           #E
+    when '/css/client.css'                         #E
+      headers res, 200, 'css'                      #E
+      res.end css                                  #E
+    when '/'                                       #E
+      headers res, 200, 'html'                     #E
+      res.end view                                 #E
+    else
+      if path.match /^\/images\/(.*)\.png$/gi      #E
+        fs.readFile ".#{path}", (err, data) ->     #E
+          if err
+            headers res, 404, 'image/png'
+            res.end()
+          else
+            headers res, 200, 'image/png'          #E
+            res.end data, 'binary'                 #E
+      else                                         #E
+        headers res, 404, 'html'                   #E
+        res.end '404'                              #E
 
 
 server.listen 8080, '127.0.0.1', ->

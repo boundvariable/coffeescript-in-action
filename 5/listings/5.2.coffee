@@ -21,13 +21,17 @@ class Camera                                              #D
     @info = info                                          #D
     @view = document.createElement 'div'                  #D
     @view.className = "camera"                            #D
-    document.body.appendChild @view                       #D
+    document.querySelector('.page').appendChild @view     #D
     @view.onclick = =>                                    #D
       @purchase()                                         #D
     @render()                                             #D
 
   render: ->                                              #D
-    @view.innerHTML = "#{@name} (#{@info.stock} stock)"   #D
+    @view.innerHTML = """
+    #{@name}
+    <br/>
+    (#{@info.stock} stock)
+    """                                                   #D
 
   purchase: ->                                            #D
     if @info.stock > 0                                    #D
@@ -41,6 +45,5 @@ class Shop                                 #E
     get '/json/list/camera', (data) ->     #E
       for own name, info of data           #E
         new Camera name, info              #E
-
 
 shop = new Shop
