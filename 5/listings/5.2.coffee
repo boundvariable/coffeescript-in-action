@@ -38,8 +38,9 @@ class Camera                                              #D
 
 class Shop                                 #E
   constructor: ->                          #E
-    get '/json/list', (data) ->            #E
+    get '/json/list/camera', (data) ->     #E
       for own name, info of data           #E
         new Camera name, info              #E
+
 
 shop = new Shop

@@ -1,13 +1,18 @@
+fs = require 'fs'
 http = require 'http'
 url = require 'url'
 coffee = require 'coffee-script'
 
-cameraData  = require('./data.coffee').all  #A
+data  = require('./data').all  #A
 
-client = ""
-require('fs').readFile './5.12', 'utf-8', (err, data) ->           #B
-  if err then throw err                                            #B
-  client = data                                                    #B
+
+readClientScript = (callback) ->
+  script = "./#{process.argv[2]}.coffee"
+  fs.readFile script, 'utf-8', (err, data) ->                      #B
+    if err then throw err                                          #B
+    callback data                                                  #B
+
+
                                                                    #B
 css = ""                                                           #B
 require('fs').readFile './client.css', 'utf-8', (err, data) ->     #B
@@ -21,7 +26,7 @@ view = """
 <!doctype html>
 <head>
 <title>Agtron's Cameras</title>
-<link rel='stylesheet' href='/css/client.css'></link>
+<link rel='stylesheet' href='/css/client.css' />
 </head>
 <body>
 <script src='/js/client.js'></script>
@@ -34,12 +39,12 @@ server = http.createServer (req, res) ->
   if req.method == "POST"                                               #D
     category = /^\/json\/purchase\/([^/]*)\/([^/]*)$/.exec(path)?[1]    #D
     item = /^\/json\/purchase\/([^/]*)\/([^/]*)$/.exec(path)?[2]        #D
-    if category? and item? and cameraData[category][item].stock > 0     #D
-      cameraData[category][item].stock -= 1                             #D
+    if category? and item? and data[category][item].stock > 0           #D
+      data[category][item].stock -= 1                                   #D
       headers res, 200, 'json'                                          #D
       res.write JSON.stringify                                          #D
         status: 'success',                                              #D
-        update: cameraData[category][item]                              #D
+        update: data[category][item]                                    #D
     else                                                                #D
       res.write JSON.stringify                                          #D
         status: 'failure'                                               #D
@@ -48,19 +53,26 @@ server = http.createServer (req, res) ->
   switch path                                  #E
     when '/json/list'                          #E
       headers res, 200, 'json'                 #E
-      res.write JSON.stringify cameraData      #E
+      res.end JSON.stringify data              #E
+    when '/json/list/camera'                   #E
+      headers res, 200, 'json'                 #E
+      cameras = data.camera                    #E
+      res.end JSON.stringify data.camera       #E
     when '/js/client.js'                       #E
       headers res, 200, 'javascript'           #E
-      res.write coffee.compile client          #E
+      writeClientScript = (script) ->          #E
+        res.end coffee.compile(script)         #E
+      readClientScript writeClientScript       #E
     when '/css/client.css'                     #E
       headers res, 200, 'css'                  #E
-      res.write css                            #E
+      res.end css                              #E
     when '/'                                   #E
       headers res, 200, 'html'                 #E
-      res.write view                           #E
+      res.end view                             #E
     else                                       #E
       headers res, 404, 'html'                 #E
-      res.write '404'                          #E
-  res.end()                                    #E
+      res.end '404'                            #E
 
-server.listen 8080, '127.0.0.1'
+
+server.listen 8080, '127.0.0.1', ->
+  console.log 'Visit http://localhost:8080/ in your browser'

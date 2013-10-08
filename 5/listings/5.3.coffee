@@ -1,5 +1,21 @@
-# http function ommitted – see listing 5.1  #A
-# get function ommitted – see listing 5.1   #B
+
+http = (method, src, callback) ->                       #A
+  handler = ->
+    if @readyState is 4 and @status is 200
+      unless @responseText is null
+        callback JSON.parse @responseText
+
+  client = new XMLHttpRequest
+  client.onreadystatechange = handler
+  client.open method, src
+  client.send()
+
+get = (src, callback) ->                       #B
+  http "GET", src, callback
+
+post = (src, callback) ->                      #B
+  http "POST", src, callback
+
 
 class Product
   constructor: (name, info) ->                            #C
