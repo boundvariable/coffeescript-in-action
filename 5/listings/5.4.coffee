@@ -24,47 +24,49 @@ class Product
     for product in products when product.name is query     #B
       product.mark()                                       #B
       product                                              #B
-  constructor: (name, info) ->           #C
-    products.push @                      #C
-    @name = name                         #C
-    @info = info                         #C
-    @view = document.createElement 'div' #C
-    @view.className = "product"          #C
-    document.body.appendChild @view      #C
-    @view.onclick = =>                   #C
-      @purchase()                        #C
-    @render()                            #C
+
+  constructor: (name, info) ->                           #C
+    products.push @                                      #C
+    @name = name                                         #C
+    @info = info                                         #C
+    @view = document.createElement 'div'                 #C
+    @view.className = "product #{@category}"             #C
+    document.querySelector('.page').appendChild @view    #C
+    @view.onclick = =>                                   #C
+      @purchase()                                        #C
+    @render()                                            #C
+
   render: ->                                       #D
-    show = ("<div>#{key}: #{val}</div>" for own key, val of @info).join ''
+    show = (for own key, val of @info
+      "<div class='info'><strong>#{key}</strong>: #{val}</div>"
+    ).join ''
     @view.innerHTML = "#{@name} #{show}"
+
   purchase: ->                                                        #E
     if @info.stock > 0                                                #E
-      post "/json/purchase/#{@purchaseCategory}/#{@name}", (res) =>   #E
+      post "/json/purchase/#{@category}/#{@name}", (res) =>           #E
         if res.status is "success"                                    #E
           @info = res.update                                          #E
           @render()                                                   #E
   mark: ->                                    #F
-    @view.style.border = "1px solid black"    #F
+    @view.style.border = "3px solid black"    #F
+
   unmark: ->                       #F
     @view.style.border = "none"    #F
 
 
 class Camera extends Product
-  purchaseCategory: 'camera'
+  category: 'camera'
   megapixels: -> @info.megapixels || "Unknown"
 
 
 class Skateboard extends Product
-  purchaseCategory: 'skateboard'
+  category: 'skateboard'
   length: -> @info.length || "Unknown"
 
 
 class Shop
   constructor: ->
-    @view = document.createElement 'input'
-    @view.onchange = ->
-      Product.find @value
-    document.body.appendChild @view
     @render()
     get '/json/list', (data) ->
       for own category of data                #G
@@ -74,8 +76,25 @@ class Shop
               new Camera name, info           #G
             when 'skateboard'                 #G
               new Skateboard name, info       #G
+
   render: ->
-    @view.innerHTML = ""
+    @view = document.createElement 'div'
+    document.querySelector('.page').appendChild @view
+    @view.innerHTML = """
+    <form class='search'>
+    Search: <input id='search' type='text' />
+    <button id='go'>Go</button>
+    </form>
+    """
+    console.log @view.innerHTML
+    @search = document.querySelector '#search'
+    @go = document.querySelector '#go'
+    @go.onclick = =>
+      Product.find @search.value
+      false
+    @search.onchange = ->
+      Product.find @value
+      false
 
 
 shop = new Shop

@@ -65,7 +65,49 @@ h1 {
     line-height:1.4;
 }
 
+.product .info {
+    display: none;
+}
+
+.product:hover {
+    background: none;
+}
+
+.product:hover .info {
+    display: block;
+    font-size: 0.8em;
+}
+
 .camera {
     background: url("/images/camera.png") bottom left no-repeat;
     background-size: 100% auto;
+}
+
+.skateboard {
+    background: url("/images/skateboard.png") bottom left no-repeat;
+    background-size: 100% auto;
+}
+
+.search {
+    font-family: "Andale Mono", AndaleMono, monospace;
+    font-size: 2em;
+    font-weight: 700;
+    margin-bottom: 2em;
+    padding-left: 3em;
+}
+
+.search input#search {
+    font-family: "Andale Mono", AndaleMono, monospace;
+    font-size: 1em;
+    font-weight: 700;
+    border: none;
+    border-bottom: 3px dashed #000;
+    width: 12em;
+}
+
+.search #go {
+    font-family: "Andale Mono", AndaleMono, monospace;
+    font-size: 1em;
+    background: #fff;
+    border: 2px solid #000;
 }
