@@ -16,58 +16,61 @@ server =
   post: (src, callback) ->
     @http "POST", src, callback
 
-class View                                                #A
-  @:: = null                                              #A
-  @include = (to) =>                                      #A
-    for key, val of @                                     #A
-      to::[key] = val                                     #A
-  @handler = (event, fn) ->                               #A
-    @node[event] = fn                                     #A
-  @update = ->                                            #A
-    unless @node?                                         #A
-      @node = document.createElement 'div'                #A
-      @node.className = @constructor.name.toLowerCase()   #A
-      document.body.appendChild @node                     #A
-    @node.innerHTML = @template()                         #A
+class View                                                   #A
+  @:: = null                                                 #A
+  @include = (to, className) =>                              #A
+    for key, val of @                                        #A
+      to::[key] = val                                        #A
+  @handler = (event, fn) ->                                  #A
+    @node[event] = fn                                        #A
+  @update = ->                                               #A
+    unless @node?                                            #A
+      @node = document.createElement 'div'                   #A
+      @node.className = @constructor.name.toLowerCase()      #A
+      document.querySelector('.page').appendChild @node      #A
+    @node.innerHTML = @template()                            #A
 
 
 class Product
-  View.include @      #B
+  View.include @                       #B
   products = []
   @find = (query) ->
     (product for product in products when product.name is query)
   constructor: (@name, @info) ->
     products.push @
     @template = =>                      #C
-      show = for own key, val of @info  #C
-        "<div>#{key}: #{val}</div>"     #C
-      "#{@name} #{show.join ''}"        #C
+      """
+      #{@name}
+      """
     @update()
     @handler "onclick", @purchase
   purchase: =>
     if @info.stock > 0
-      server.post "/json/purchase/#{@purchaseCategory}/#{@name}", (res) =>
+      server.post "/json/purchase/#{@category}/#{@name}", (res) =>
         if res.status is "success"
           @info = res.update
           @update()
 
 class Camera extends Product
-  purchaseCategory: 'camera'
+  category: 'camera'
   megapixels: -> @info.megapixels || "Unknown"
 
 
 class Skateboard extends Product
-  purchaseCategory: 'skateboard'
+  category: 'skateboard'
   length: -> @info.length || "Unknown"
 
 
 class Shop
-  View.include @         #D
+  View.include @                 #D
   constructor: ->
-    @template = ->           #E
-      "<input>"              #E
-    @update()
-    @handler "onkeypress", (e) -> console.log Product.find e.target.value
+    @template = ->               #E
+      "<h1>News: #{@breakingNews}</h1>"
+
+    server.get '/json/news', (news) =>
+      @breakingNews = news.breaking
+      @update()
+
     server.get '/json/list', (data) ->
       for own category of data
         for own name, info of data[category]

@@ -4,6 +4,7 @@ url = require 'url'
 coffee = require 'coffee-script'
 
 data  = require('./data').all       #A
+news  = require('./news').all       #A
 
 
 readClientScript = (callback) ->
@@ -60,6 +61,9 @@ server = http.createServer (req, res) ->
       headers res, 200, 'json'                     #E
       cameras = data.camera                        #E
       res.end JSON.stringify data.camera           #E
+    when '/json/news'                              #E
+      headers res, 200, 'json'                     #E
+      res.end JSON.stringify news                  #E
     when '/js/client.js'                           #E
       headers res, 200, 'javascript'               #E
       writeClientScript = (script) ->              #E
