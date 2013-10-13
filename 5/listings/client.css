@@ -65,8 +65,22 @@ h1 {
     line-height:1.4;
 }
 
+.l55 .product {
+    text-align: left;
+    width: 40em;
+    height: 11em;
+    clear: left;
+    background: url("/images/product.png") bottom left no-repeat;
+    background-size: 10em auto;
+    padding: 1em 0 0 0;
+}
+
 .product .info {
     display: none;
+}
+
+.product dl.info dt {
+    margin-top: 1em;
 }
 
 .product:hover {
@@ -78,9 +92,38 @@ h1 {
     font-size: 0.8em;
 }
 
-.camera {
+.camera, .l55 .camera {
     background: url("/images/camera.png") bottom left no-repeat;
-    background-size: 100% auto;
+    background-size: 10em auto;
+}
+
+.l55 .product:hover {
+    background: url("/images/product.png") bottom left no-repeat;
+    background-size: 10em auto;
+}
+
+.l55 .camera:hover {
+    background: url("/images/camera.png") bottom left no-repeat;
+    background-size: 10em auto;
+}
+
+.camera .gallery {
+    float: left;
+    display: block;
+    width: 40em;
+    margin: 3em 0 0 15em;
+}
+
+.camera .gallery li {
+    float: left;
+    display: block;
+    margin: 0 1em 0 0;
+}
+
+.camera .gallery img {
+    height: 6.3em;
+    float: left;
+    display: block;
 }
 
 .skateboard {

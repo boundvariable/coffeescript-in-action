@@ -1,78 +1,71 @@
-# http ommitted from this listing
-# get ommitted from this listing
-# post ommitted from this listing
+
+http = (method, src, callback) ->
+  handler = ->
+    if @readyState is 4 and @status is 200
+      unless @responseText is null
+        callback JSON.parse @responseText
+
+  client = new XMLHttpRequest
+  client.onreadystatechange = handler
+  client.open method, src
+  client.send()
+
+get = (src, callback) ->
+  http "GET", src, callback
+
+post = (src, callback) ->
+  http "POST", src, callback
+
 
 class Product
-  products = []
-  @find = (query) ->
-    for product in products
-      product.unmark()
-    for product in products when product.name is query
-      product.mark()
-      product
-
   constructor: (name, info) ->
-    products.push @
     @name = name
     @info = info
-    console.log @info
     @view = document.createElement 'div'
-    @view.className = "product"
-    document.body.appendChild @view
+    @view.className = "product #{@category}"
+    document.querySelector('.page').appendChild @view
     @view.onclick = =>
       @purchase()
     @render()
-  render: -> template()
+  render: ->
+    @view.innerHTML = @template()
   purchase: ->
     if @info.stock > 0
-      post "/json/purchase/#{@purchaseCategory}/#{@name}", (res) =>
+      post "/json/purchase/#{@category}/#{@name}", (res) =>
         if res.status is "success"
           @info = res.update
           @render()
   template: =>
     """
     <h2>#{@name}</h2>
-    <dl>
-    <dt>Stock</dt> <dd>#{@info.stock}</dd>
-    <dt>New stock arrives in</dt>
+    <dl class='info'>
+    <dt>Stock</dt>
+    <dd>#{@info.stock}</dd>
+    <dt>Specials?</dt>
+    <dd>#{@specials.join(',') || 'No'}</dd>
     </dl>
     """
 
-  mark: ->
-    @view.style.border = "1px solid black";
-  unmark: ->
-    @view.style.border = "none";
-
-class Gallery
-  render: -> "a gallery"
 
 class Camera extends Product
-  purchaseCategory: 'camera'
+  category: 'camera'
   megapixels: -> @info.megapixels || "Unknown"
-  template: ->
-    """
-    #{@name}: #{@info.stock}
-    {@gallery.render()}
-    """
 
 class Skateboard extends Product
-  purchaseCategory: 'skateboard'
+  category: 'skateboard'
   length: -> @info.length || "Unknown"
 
 class Shop
   constructor: ->
-    unless Product::specials?    #A
-      Product::specials = []     #A
-    @view = document.createElement 'input'
-    @view.onchange = ->
-      Product.find @value
-    document.body.appendChild @view
+    unless Product::specials?                 #A
+      Product::specials = []                  #A
+    @view = document.createElement 'div'
     @render()
     get '/json/list', (data) ->
       for own category of data
         for own name, info of data[category]
-          if info.special?                     #B
-            Product::specials.push product     #B
+          if info.special?                           #B
+            Product::specials.push info.special      #B
           switch category
             when 'camera'
               new Camera name, info

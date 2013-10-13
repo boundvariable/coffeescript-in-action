@@ -17,31 +17,34 @@ post = (src, callback) ->
 
 
 
-class Gallery               #A
-  render: -> "a gallery"    #A
+class Gallery                                                 #A
+  constructor: (@photos) ->                                   #A
+  render: ->                                                  #A
+    images = for photo in @photos                             #A
+      "<li><img src='#{photo}' alt='sample photo' /></li>"    #A
+    "<ul class='gallery'>#{images.join ''}</ul>"              #A
+
 
 class Product
-  instances = []
-  @find = (name) ->
-    (product for product in instances when product.name is name)
-
-  constructor: (name, info) ->            #B
-    instances.push @                      #B
-    @name = name                          #B
-    @info = info                          #B
-    @view = document.createElement 'div'  #B
-    document.body.appendChild @view       #B
-    @render()                             #B
+  constructor: (name, info) ->                           #B
+    @name = name                                         #B
+    @info = info                                         #B
+    @view = document.createElement 'div'                 #B
+    @view.className = 'product'                          #B
+    document.querySelector('.page').appendChild @view    #B
+    @render()                                            #B
   render: ->
     @view.innerHTML = "#{@name}: #{@info.stock}"
 
+
 class Camera extends Product
-  constructor: (name, info) ->       #C
-    @gallery = new Gallery           #C
-    super(name, info)                #C
+  constructor: (name, info) ->                   #C
+    @gallery = new Gallery info.gallery          #C
+    super name, info                             #C
+    @view.className += ' camera'                 #C
   render: ->
     @view.innerHTML = """
-      #{@name}: #{@info.stock}
+      #{@name} (#{@info.stock})
       #{@gallery.render()}
     """
 
@@ -49,7 +52,8 @@ class Camera extends Product
 class Shop
   constructor: ->
     @view = document.createElement 'div'
-    document.body.appendChild @view
+    document.querySelector('.page').appendChild @view
+    document.querySelector('.page').className += ' l55'
     @render()
     get '/json/list', (data) ->
       for own category of data
@@ -57,24 +61,11 @@ class Shop
           switch category
             when 'camera'
               new Camera name, info
+            else
+              new Product name, info
 
   render: () ->
-    @search = document.createElement 'input'
-    @searchResults = document.createElement 'div'
-    @search.onchange = =>
-      results = Product.find @value
-      if results.length > 0
-        @view.innerHTML = """
-        Found: #{results.join ','}
-        """
-      else
-        @view.innerHTML = "Nothing found"
-      false
-
     @view.innerHTML = ""
-    document.body.appendChild @search
 
-
-new Shop
-
-# Product.find 'aclie'
+window.onload = ->
+  shop = new Shop
