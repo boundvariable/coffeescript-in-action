@@ -2,29 +2,32 @@
 fs = require 'fs'
 {exec, execFile} = require 'child_process'
 
-{ clean, compile, copy, create_artifact, run_specs, run_app } = require './build_utilities'  #A
+buildUtilities = require './build_utilities'  #A
+
+{ clean, compile, copy, createArtifact, runSpecs, runApp } = buildUtilities.fromDir './'
 
 VERSION = fs.readFileSync('./VERSION', 'utf-8')   #B
 
 task 'clean', 'delete existing build', ->     #C
-  clean "compiled"                            #C
+  execFile "npm", ["install"], ->             #C
+    clean "compiled"                          #C
 
 task 'build', 'run the build', ->                 #D
   clean 'compiled', ->                            #D
     compile 'app', ->                             #D
       copy 'content', 'compiled', ->              #D
-        create_artifact 'compiled', VERSION, ->   #D
+        createArtifact 'compiled', VERSION, ->    #D
           console.log 'Build complete'            #D
 
 task 'test' , 'run the tests', ->             #E
   clean 'compiled', ->                        #E
     compile 'app', ->                         #E
       compile 'spec', ->                      #E
-        run_specs 'compiled', ->              #E
+        runSpecs 'compiled', ->               #E
           console.log 'Tests complete'        #E
 
 task "development:start", "start on development", ->              #F
-  run_app 'development'
+  runApp 'development'
 
 SERVER = require('./app/config').production.host
 
@@ -45,5 +48,5 @@ task "production:deploy", "deploys the app to production", ->
   clean 'compiled', ->
     compile 'app', ->
       copy 'content', 'compiled', ->
-        create_artifact 'compiled', VERSION, ->
+        createArtifact 'compiled', VERSION, ->
           deploy()

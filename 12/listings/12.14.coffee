@@ -6,16 +6,16 @@ task 'build:client', 'build client side stuff with modules', ->
   compiler = require 'coffee-script'
   modules = fs.readFileSync "lib/modules.coffee", "utf-8"     #A
 
-  modules = compiler.compile modules, bare: true         #B
+  modules = compiler.compile modules, bare: true              #B
   files = fs.readdirSync 'client'
   source = (for file in files when /\.coffee$/.test file
     module = file.replace /\.coffee/, ''
-    file_source = fs.readFileSync "client/#{file}", "utf-8"  #C
-    """                                                         #D
-    defmodule({#{module}: function (require, exports) {         #D
-      #{compiler.compile(file_source, bare: true)}              #D
-    }});                                                        #D
-    """                                                         #D
+    fileSource = fs.readFileSync "client/#{file}", "utf-8"    #C
+    """
+    defmodule({#{module}: function (require, exports) {
+      #{compiler.compile(fileSource, bare: true)}
+    }});
+    """                                                        #D
   ).join '\n\n'    #E
 
   out = modules + '\n\n' + source

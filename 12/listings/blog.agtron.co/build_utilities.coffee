@@ -1,17 +1,17 @@
 fs = require 'fs'
 {spawn, exec, execFile, fork} = require 'child_process'    #A
 
-client_compiled = false
+clientCompiled = false
 
-for_all_specs_in = (dir, fn) ->                           #B
+forAllSpecsIn = (dir, fn) ->                              #B
   execFile 'find', [ dir ], (err, stdout, stderr) ->      #B
-    file_list = stdout.split '\n'                         #B
-    for file in file_list                                 #B
+    fileList = stdout.split '\n'                          #B
+    for file in fileList                                  #B
       fn file if /_spec.js$/.test file                    #B
 
-compile_client = (callback) ->
-  return callback() if client_compiled                              #C
-  client_compiled = true                                            #C
+compileClient = (callback) ->
+  return callback() if clientCompiled                               #C
+  clientCompiled = true                                             #C
   compiler = require 'coffee-script'                                #C
   modules = fs.readFileSync "lib/modules.coffee", "utf-8"           #C
   modules = compiler.compile modules, bare: true                    #C
@@ -20,11 +20,11 @@ compile_client = (callback) ->
   fs.mkdirSync "compiled/app/client"
   source = (for file in files when /\.coffee$/.test file            #C
     module = file.replace /\.coffee/, ''                            #C
-    file_source = fs.readFileSync "client/#{file}", "utf-8"         #C
-    fs.writeFileSync "compiled/app/client/#{module}.js", compiler.compile file_source
+    fileSource = fs.readFileSync "client/#{file}", "utf-8"          #C
+    fs.writeFileSync "compiled/app/client/#{module}.js", compiler.compile fileSource
     """
     defmodule({#{module}: function (require, exports) {
-      #{compiler.compile(file_source, bare: true)}
+      #{compiler.compile(fileSource, bare: true)}
     }});
     """                                                             #C
   ).join '\n\n'                                                     #C
@@ -34,38 +34,37 @@ compile_client = (callback) ->
 
   callback?()
 
-compile = (path, callback) ->
-  coffee = spawn 'coffee', ['-c', '-o', "compiled/#{path}", path]
+exports.fromDir = (root) ->
 
-  coffee.on 'exit', (code, s) ->
-    if code is 0 then compile_client callback
-    else console.log 'error compiling'
+  return unless root
 
-  coffee.on 'message', (data) ->
-   console.log data
+  compile = (path, callback) ->
+    coffee = spawn 'coffee', ['-c', '-o', "#{root}compiled/#{path}", path]
 
-create_artifact = (path, version, callback) ->                           #D
-  execFile "tar", ["-cvf", "artifact.#{version}.tar", path], (e, d) ->   #D
-    callback?()                                                          #D
+    coffee.on 'exit', (code, s) ->
+      if code is 0 then compileClient callback
+      else console.log 'error compiling'
 
-run_specs = (folder) ->
-  for_all_specs_in folder, (file) ->
-    require "./#{file}"
+    coffee.on 'message', (data) ->
+     console.log data
 
-clean = (path, callback) ->
-  exec "rm -rf #{path}", -> callback?()
+  createArtifact = (path, version, callback) ->                            #D
+    execFile "tar", ["-cvf", "artifact.#{version}.tar", path], (e, d) ->   #D
+      callback?()                                                          #D
 
-copy = (src, dst, callback) ->
-  exec "cp -R #{src} #{dst}/.", ->
-    callback?()
+  runSpecs = (folder) ->
+    forAllSpecsIn "#{root}#{folder}", (file) ->
+      require "./#{file}"
 
-run_app = (env) ->
-  exec 'NODE_ENV=#{env} node compiled/app/server.js &', ->   #F
-    console.log "Running..."
+  clean = (path, callback) ->
+    exec "rm -r #{root}#{path}", (err) -> callback?()
 
-exports.clean = clean
-exports.compile = compile
-exports.copy = copy
-exports.create_artifact = create_artifact
-exports.run_specs = run_specs
-exports.run_app = run_app
+  copy = (src, dst, callback) ->
+    exec "cp -R #{root}#{src} #{root}#{dst}/.", ->
+      callback?()
+
+  runApp = (env) ->
+    exec 'NODE_ENV=#{env} nohup node compiled/app/server.js &', ->
+      console.log "Running..."
+
+  {clean, compile, copy, createArtifact, runSpecs, runApp}
