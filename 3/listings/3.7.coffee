@@ -46,12 +46,21 @@ init = ->
         response.end "#{attendees + friends}"                         #8
 
   server.listen 8080, '127.0.0.1'        #9
+  console.log 'Now running at http://127.0.0.1:8080'
 
   #10
   clientScript = coffee.compile '''
+  get = (path, callback) ->
+    req = new XMLHttpRequest()
+    req.onload = (e) -> callback req.responseText
+    req.open 'get', path
+    req.send()
+
   showAttendees = ->
-    $.get "/count", (response) ->
-      document.querySelector("#how-many-attendees").innerHTML ="#{response} attendees!"
+    out = document.querySelector '#how-many-attendees'
+    get '/count', (response) ->
+      out.innerHTML = "#{response} attendees!"
+
   showAttendees()
   setInterval showAttendees, 1000
   '''
@@ -62,7 +71,6 @@ init = ->
   <title>How many people are coming?</title>
   <body>
   <div id='how-many-attendees'></div>
-  <script src='http://code.jquery.com/jquery-1.6.2.js'></script>
   <script>
   #{clientScript}
   </script>

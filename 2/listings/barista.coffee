@@ -1,8 +1,8 @@
-houseRoast = null
+houseRoast = 'Yirgacheffe'
 
 hasMilk = (style) ->
   switch style.toLowerCase()
-    when "latte", "cappucino"
+    when 'latte', 'cappucino', 'mocha'
       yes
     else
       no

@@ -2,12 +2,13 @@
 (function() {
   var barista, hasMilk, houseRoast, makeCoffee, order, request, response;
 
-  houseRoast = null;
+  houseRoast = 'Yirgacheffe';
 
   hasMilk = function(style) {
     switch (style.toLowerCase()) {
-      case "latte":
-      case "cappucino":
+      case 'latte':
+      case 'cappucino':
+      case 'mocha':
         return true;
       default:
         return false;
