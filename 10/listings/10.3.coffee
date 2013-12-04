@@ -1,7 +1,7 @@
 assert = require 'assert'
 
 {fact} = require './fact'         #A
-{Tracking} = require './11.4'     #B
+{Tracking} = require './10.4'     #B
 
 fact 'controller responds with 200 header and empty body', ->
   request =  url: '/some/url'

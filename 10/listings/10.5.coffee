@@ -2,8 +2,8 @@ assert = require 'assert'
 fact = require('./fact').fact
 http = require 'http'
 
-{Tracking} = require './11.4'
-{User} = require './11.6'
+{Tracking} = require './10.4'
+{User} = require './10.6'
 
 SERVER_OPTIONS =
   host: 'localhost'

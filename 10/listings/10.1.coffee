@@ -10,14 +10,14 @@ fact = (description, fn) ->                       #B
   catch e                                         #B
     console.log "#{description}: \n#{e.stack}"    #B
 
-fact "add_word adds a word", ->
+fact "addWord adds a word", ->
   input = "product special"
   expectedOutput = "product special popular"
   actualOutput = addWord input, "popular"
 
   assert.equal expectedOutput, actualOutput
 
-fact "remove_word removes a word and surrounding whitespace", ->
+fact "removeWord removes a word and surrounding whitespace", ->
   tests = [
     initial: "product special"
     replace: "special"
