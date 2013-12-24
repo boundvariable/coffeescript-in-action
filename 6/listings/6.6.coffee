@@ -15,7 +15,50 @@ around = (decoration) ->
   (base) ->
     (params...) ->
       result = undefined
-      callback = =>
-        result = base.apply @, params
-      decoration.apply @, ([callback].concat params)
+      func = => result = base.apply @, params
+      decoration.apply @, ([func].concat params)
       result
+
+## Example
+class Robot
+  withRunningEngine = around (action) ->
+    @startEngine()
+    action()
+    @stopEngine()
+  constructor: (@at = 0) ->
+  position: ->
+    @at
+  move: (displacement) ->
+    console.log 'move'
+    @at += displacement
+  startEngine: -> console.log 'start engine'
+  stopEngine: -> console.log 'stop engine'
+  forward: withRunningEngine ->
+    @move 1
+  reverse: withRunningEngine ->
+    @move -1
+  wasteFuel: withRunningEngine ->
+    console.log 'Wasting fuel'
+    'Fuel wasted'
+
+
+bender = new Robot 3
+bender.forward()
+# start engine
+# move
+# stop engine
+
+bender.forward()
+# start engine
+# move
+# stop engine
+
+bender.reverse()
+# start engine
+# move
+# stop engine
+assert = require 'assert'
+assert.deepEqual bender.position(), 4
+# 4
+
+assert.equal bender.wasteFuel(), 'Fuel wasted'

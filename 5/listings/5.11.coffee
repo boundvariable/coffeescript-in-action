@@ -1,10 +1,13 @@
 class Mixin
-  include: (klass) ->       #A
-    for key, value of @     #A
-      klass::[key] = value  #A
+  constructor: (methods) ->
+    for name, body of methods
+      @[name] = body
+  include: (klass) ->         #A
+    for key, value of @       #A
+      klass::[key] = value    #A
 
-htmlRenderer = new Mixin     #B
-  render: -> "rendered"      #B
+htmlRenderer = new Mixin      #B
+  render: -> "rendered"       #B
 
 class Camera                  #C
   htmlRenderer.include @      #C

@@ -3,7 +3,7 @@ numberSold = 0                                          #A
 calculateNumberSold = (salePrice) ->
   numberSold = 50 + 20/10 * (200 - salePrice)
 
-calculateRevenue = (callback) ->
+calculateRevenue = (salePrice, callback) ->
   callback numberSold * salePrice
 
 revenueBetween = (start, finish) ->
@@ -12,10 +12,13 @@ revenueBetween = (start, finish) ->
     calculateNumberSold price
     addToTotals = (result) ->
       totals.push result
-    calculateRevenue salePrice, addToTotals
+    calculateRevenue price, addToTotals
   totals
 
 revenueBetween 140, 145
-# [1400,1410,1420,1430,1440,1450]
+# [ 23800, 23688, 23572, 23452, 23328, 23200 ]
 #A shared state
 #B local state
+
+assert = require 'assert'
+assert.deepEqual (revenueBetween 140, 145), [ 23800, 23688, 23572, 23452, 23328, 23200 ]
