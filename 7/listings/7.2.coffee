@@ -1,5 +1,5 @@
 
-makeCompetition = ({max, sort}) ->
+makeCompetition = ({max, sort}) ->       #A
   find = (name) ->
     document.querySelector ".#{name}"
 
@@ -19,8 +19,8 @@ makeCompetition = ({max, sort}) ->
     for team in rest
       color find(team.name), 'blue'
 
-  rank = (unranked) ->
-    unranked.sort(sort).slice(0, max)
+  rank = (unranked) ->                        #B
+    unranked.sort(sort).slice(0, max)         #B
 
 
   initialize: (unranked) ->
@@ -30,17 +30,19 @@ makeCompetition = ({max, sort}) ->
     rest = ranked.slice 1
     highlight first, rest...
 
+  { initialize }
 
-sortOnPoints = (a, b) ->
-  a.points > b.points
+
+sortOnPoints = (a, b) ->     #D
+  a.points > b.points        #D
 
 window.onload = ->
-  competition = makeCompetition max: 5, sort: sortOnPoints
+  competition = makeCompetition max: 5, sort: sortOnPoints     #E
   competition.initialize [
     { name: 'wolverines', points: 22 }
     { name: 'wildcats', points: 11 }
     { name: 'mongooses', points: 33 }
-    { name: 'racoons', points: 12 }
+    { name: 'raccoons', points: 12 }
     { name: 'badgers', points: 19 }
     { name: 'baboons', points: 16 }
   ]

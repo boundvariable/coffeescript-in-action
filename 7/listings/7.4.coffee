@@ -19,8 +19,11 @@ makeCompetition = ({max, sort}) ->
     console.log name
     document.querySelector ".#{name}"
 
-  color = (element, color) ->
+  backgroundColor = (element, color) ->
     element.style.background = color
+
+  textColor = (element, color) ->
+    element.style.color = color
 
   insert = (teams...) ->
     root = document.querySelector '.teams'
@@ -28,9 +31,11 @@ makeCompetition = ({max, sort}) ->
       root.innerHTML += render team
 
   highlight = (first, rest...) ->
-    color find(first.name), 'gold'
+    backgroundColor find(first.name), 'gold'
+    textColor find(first.name), 'black'
     for team in rest
-      color find(team.name), 'blue'
+      backgroundColor find(team.name), 'blue'
+      textColor find(team.name), 'white'
 
   rank = (unranked) ->
     unranked.sort(sort).slice(0, max).reverse()

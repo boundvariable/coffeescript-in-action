@@ -11,7 +11,6 @@ makeCompetition = ({max, sort}) ->
     """
 
   find = (name) ->
-    console.log name
     document.querySelector ".#{name}"
 
   color = (element, color) ->

@@ -10,26 +10,26 @@ describe 'Chapter 7', ->
     highlight = (name) ->
       color find(name), 'yellow'
 
-    highlight('x').should_be 'x yellow'
+    highlight('x').shouldBe 'x yellow'
 
   it 'should demonstrate highlight function with array as arg', ->
     highlight = (names) ->
       for name in names
         color find(name), 'yellow'
 
-    highlight(['x', 'y']).should_be ['x yellow', 'y yellow']
+    highlight(['x', 'y']).shouldBe ['x yellow', 'y yellow']
 
   it 'should demonstrate highlight with rest', ->
     highlight = (names...) ->
       (for name in names
         color find(name), 'yellow')
 
-    highlight('x', 'y').should_be ['x yellow', 'y yellow']
+    highlight('x', 'y').shouldBe ['x yellow', 'y yellow']
 
   it 'should show that arguments does not have slice', ->
     names = []
     highlight = (names) ->
-      (arguments.slice == undefined).should_be true
+      (arguments.slice == undefined).shouldBe true
 
     highlight 'x', 'y'
 
@@ -41,26 +41,26 @@ describe 'Chapter 7', ->
     insert teams
 
   res = initialize('wolverines', 'sabertooths', 'mongooses')
-  res.should_be [ [ 'wolverines','sabertooths', 'mongooses' ] ]
+  res.shouldBe [ [ 'wolverines','sabertooths', 'mongooses' ] ]
 
   initialize = (teams...) ->
     insert teams...
 
   res = initialize 'wolverines', 'sabertooths', 'mongooses'
-  res.should_be [ 'wolverines','sabertooths', 'mongooses' ]
+  res.shouldBe [ 'wolverines','sabertooths', 'mongooses' ]
 
   it 'should demonstrate the toggler', ->
-    make_toggler = (active, inactive) ->
+    makeToggler = (active, inactive) ->
       ->
         temporary = active
         active = inactive
         inactive = temporary
         [active, inactive]
 
-    toggler = make_toggler 'komodos', 'raptors'
+    toggler = makeToggler 'komodos', 'raptors'
 
-    toggler().should_be ['raptors', 'komodos']
-    toggler().should_be ['komodos', 'raptors']
+    toggler().shouldBe ['raptors', 'komodos']
+    toggler().shouldBe ['komodos', 'raptors']
 
   it 'should demonstrate destructuring array', ->
     active = 'komodos'
@@ -68,8 +68,8 @@ describe 'Chapter 7', ->
 
     [active, inactive] = [inactive, active]
 
-    active.should_be 'raptors'
-    inactive.should_be 'komodos'
+    active.shouldBe 'raptors'
+    inactive.shouldBe 'komodos'
 
   it 'should demonstrate destructuring toggler', ->
     make_toggler = (a, b) ->
@@ -100,7 +100,38 @@ describe 'Chapter 7', ->
 
     [first, field..., last] = rank competitors, 'points'
 
-    relegate(last).should_be 'bobcats got relegated'
+    relegate(last).shouldBe 'bobcats got relegated'
+
+  it 'should demonstrate object destructuring', ->
+    data =
+      team2311:
+        name: 'Honey Badgers'
+        stats:
+          scored: 22
+          conceded: 22
+          points: 11
+      team4326:
+        name: 'Mongooses'
+        stats:
+          scored: 14
+          conceded: 19
+          points: 8
+
+    res = for id, team of data
+      name = team.name
+      points = team.stats.points
+      {
+        name: name
+        points: points
+      }
+
+    res.shouldBe [{"name":"Honey Badgers","points":11},{"name":"Mongooses","points":8}]
+
+    res = for id, team of data
+      { name: team.name,  points: team.stats.points }
+
+    res.shouldBe  [ { name: 'Honey Badgers', points: 11 }, { name: 'Mongooses', points: 8 } ]
+
 
   it 'should demonstrate a module pattern', ->
     competition = do ->
@@ -112,14 +143,61 @@ describe 'Chapter 7', ->
       highlight: highlight,
       initialize: initialize
 
-    competition.highlight().should_be 'highlight'
+    competition.highlight().shouldBe 'highlight'
+
+
+  it 'should demonstrate a module pattern with object shorthand', ->
+    makeCompetition = ->
+      find = ->
+      color = ->
+      highlight = ->
+      initialize = -> 'initialized'
+
+      {highlight, initialize}
+
+    competition = makeCompetition()
+    competition.initialize().shouldBe 'initialized'
+
 
   it 'should show object for named parameters', ->
-    make_competition = ({max_competitors, sort_order}) ->
-      max_competitors
-      sort_order
+    sorter = ->
 
-    make_competition(competitors: 3, sort_order: 'ascending')
+    makeCompetition = ({max, sort}) ->
+      {max, sort}
+
+    out = makeCompetition max: 11, sort: sorter
+    out.shouldBe max: 11, sort: sorter
+
+    out = makeCompetition sort: sorter, max: 5
+    out.shouldBe max:5, sort: sorter
+
+
+  it 'should demonstrate property access', ->
+    user =
+      name:
+        title: 'Mr'
+        first: 'Data'
+        last: 'Object'
+      contact:
+        phone:
+          home: '555 2234'
+          mobile: '555 7766'
+        email:
+          primary: 'mrdataobject@coffeescriptinaction.com'
+
+    user.contact.phone.home.shouldBe '555 2234'
+
+  it 'should show exception when no null soak', ->
+    s = 'unchanged'
+    user =
+      name:
+        first: 'Haveno'
+        middle: 'Contact'
+        last: 'Details'
+    try
+      s = user.contact.phone.home
+    catch e
+      s.shouldBe 'unchanged'
 
   it 'should show null soak preventing view error', ->
     render = (user) ->
