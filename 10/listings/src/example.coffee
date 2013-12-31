@@ -1,0 +1,3 @@
+
+exports.example = ->
+  '123'

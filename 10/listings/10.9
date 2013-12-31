@@ -12,6 +12,7 @@ test = (file) ->
       {fact, report} = require '../fact'
       assert = require 'assert'
       #{data}
+      report '#{file}'
     """
     coffee.run it, filename: SPEC_PATH + file       #C
 

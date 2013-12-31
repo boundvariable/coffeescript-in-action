@@ -1,4 +1,4 @@
-var __hasProp = Object.prototype.hasOwnProperty;
+var __hasProp = {}.hasOwnProperty;
 
 (function() {
   var cache, modules;
@@ -7,7 +7,9 @@ var __hasProp = Object.prototype.hasOwnProperty;
   this.require = function(raw_name) {
     var module, name;
     name = raw_name.replace(/[^a-z]/gi, '');
-    if (cache[name]) return cache[name].exports;
+    if (cache[name]) {
+      return cache[name].exports;
+    }
     if (modules[name]) {
       module = {
         exports: {}
@@ -34,11 +36,10 @@ var __hasProp = Object.prototype.hasOwnProperty;
 
 
 defmodule({comments: function (require, exports) {
-  var Comments;
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+  var Comments,
+  __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
 Comments = (function() {
-
   function Comments(url, out, http_request) {
     this.url = url;
     this.out = out;
@@ -52,8 +53,8 @@ Comments = (function() {
   };
 
   Comments.prototype.bind = function(element, event) {
-    var comment;
-    var _this = this;
+    var comment,
+      _this = this;
     comment = element.querySelector('textarea');
     return element["on" + event] = function() {
       _this.post(comment.value);
@@ -91,7 +92,9 @@ http_request = function(url, callback) {
   http = new XMLHttpRequest;
   http.open('POST', url, true);
   http.onreadystatechange = function() {
-    if (http.readyState === 4) return callback(http.responseText);
+    if (http.readyState === 4) {
+      return callback(http.responseText);
+    }
   };
   return http.send();
 };

@@ -52,7 +52,7 @@ describe "chapter 2", ->
     (not (3%2)).shouldBe false
     (not (4%2)).shouldBe true
 
-  it "should do comparison", ->
+  it "should demonstrate comparison", ->
     (42 > 0).shouldBe true
     (42 >= 42).shouldBe true
     time = 13
@@ -60,23 +60,23 @@ describe "chapter 2", ->
     ('Aardvark' < 'Zebra').shouldBe true
     (2 > 'giraffe').shouldBe false
 
-  it "should guard", ->
+  it "should demonstrate guard", ->
     wuss = 'A weak or ineffectual person'
     chuckNorris = 'Chuck Norris'
     (chuckNorris is wuss and pickFight).shouldBe false
 
-  it "should default", ->
+  it "should demonstrate default", ->
     wuss = 'A weak or ineffectual person'
     chuckNorris = 'Chuck Norris'
     runAway = 'Running away!'
     (chuckNorris is wuss or runAway).shouldBe 'Running away!'
 
-  it "should define a function with default", ->
+  it "should demonstrate defining a function with default", ->
     makeCoffee = (style) -> style || 'Espresso'
     (makeCoffee()).shouldBe 'Espresso'
     makeCoffee('Cappuccino').shouldBe 'Cappuccino'
 
-  it "should access object properties", ->
+  it "should demonstrate object property access", ->
     texasRanger = {actor: 'Chuck Norris'}
     texasRanger.actor.shouldBe 'Chuck Norris'
 
@@ -84,7 +84,7 @@ describe "chapter 2", ->
     myPropertyName = 'title'
     movie[myPropertyName].shouldBe 'Way of the Dragon'
 
-  it "should evaluate to 'object' for typeof null", ->
+  it "should demonstrate evaluation to 'object' for typeof null", ->
     (typeof null).shouldBe 'object'
 
   it "should demonstrate dynamic and weak typing", ->
@@ -400,4 +400,3 @@ it "should demonstrate heredoc interpolation", ->
   <title>#{title}</title>
   <body>
   """.shouldBe "<!doctype html>\n<title>test</title>\n<body>"
-

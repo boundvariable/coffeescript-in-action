@@ -1,124 +1,100 @@
-fs = require 'fs'
-{EventEmitter} = require 'events'
-
 withEvents = (emitter, event) ->
   pipeline = []
   data = []
 
-  reset = ->        #A
-    pipeline = []   #A
-                    #A
-  reset()           #A
+  reset = ->  pipeline = []
 
-  run = ->                                        #B
-    result = data                                 #B
-    for processor in pipeline                     #B
-      if processor.filter?                        #B
-        result = result.filter processor.filter   #B
-      else if processor.map?                      #B
-        result = result.map processor.map         #B
-    result                                        #B
+  run = ->
+    result = data
+    for processor in pipeline
+      if processor.filter?
+        result = result.filter processor.filter
+      else if processor.map?
+        result = result.map processor.map
+    result
 
-  emitter.on event, (datum) ->   #C
-    data.push datum              #C
+  emitter.on event, (datum) ->
+    data.push datum
 
-  filter: (filter) ->                 #D
-    pipeline.push {filter: filter}    #D
-    @                                 #D
-  map: (map) ->                       #D
-    pipeline.push {map: map}          #D
-    @                                 #D
-  evaluate: ->                        #D
-    result = run()                    #D
-    reset()                           #D
-    result                            #D
-
-class CSVRowEmitter extends EventEmitter        #E
-
-  valid = (row) ->
-      /[^,]+,[^,]+,[^,]+/.test row
-
-  constructor: (source) ->
-    @remainder = ''
-    @numbers = []
-    stream = fs.createReadStream source, {flags: 'r', encoding: 'utf-8'}
-    stream.on 'data', (data) =>
-      chunk = data.split /\n/
-      firstRow = chunk[0]
-      lastRow = chunk[chunk.length-1]
-      if not valid firstRow and @remainder
-        chunk[0] = @remainder + firstRow
-      if not valid lastRow
-        @remainder = lastRow
-        chunk.pop()
-      else @remainder = ''
-
-      @emit('row', row) for row in chunk when valid row
+  filter: (filter) ->
+    pipeline.push {filter}
+    @
+  map: (map) ->
+    pipeline.push {map}
+    @
+  drain: (fn) ->                   #A
+    emitter.on event, (datum) ->   #A
+      result = run()               #A
+      data = []                    #A
+      fn result                    #A
+  evaluate: ->
+    result = run()
+    reset()
+    result
 
 
-class PhoneBook                                    #F
-  asObject = (row) ->
-    [name, number, relationship] = row.split ','
-    { name, number, relationship }
+UP = 38       #B
+DOWN = 40     #B
+Q = 81        #B
+A = 65        #B
 
-  asString = (data) ->
-    "#{data.name}: #{data.number} (#{data.relationship})"
+doc =                                      #C
+  on: (event, fn) ->                       #C
+    old = document["on#{event}"] || ->     #C
+    document["on#{event}"] = (e) ->        #C
+      old e                                #C
+      fn e                                 #C
 
-  print = (s) ->
-    s.join '\n'
+class Paddle
+  constructor: (@top=0, @left=0) ->
+    @render()
 
-  relationshipIs = (relationship) ->
-    (data) -> data.relationship is relationship
+  move: (displacement) ->              #D
+    @top += displacement*5             #D
+    @paddle.style.top = @top + 'px'    #D
 
-  nameIs = (name) ->
-    (data) -> data.name is name
+  render: ->                                                #E
+    @paddle = document.createElement 'div'                  #E
+    @paddle.className = 'paddle'                            #E
+    @paddle.style.backgroundColor = 'black'                 #E
+    @paddle.style.position = 'absolute'                     #E
+    @paddle.style.top = "#{@top}px"                         #E
+    @paddle.style.left = "#{@left}px"                       #E
+    @paddle.style.width = '20px'                            #E
+    @paddle.style.height = '100px'                          #E
+    document.querySelector('#pong').appendChild @paddle     #E
 
-  constructor: (sourceCsv) ->
-    csv = new CSVRowEmitter sourceCsv
-    @numbers = withEvents(csv, 'row')
+displacement = ([up,down]) ->
+  (event) ->
+    switch event.keyCode
+      when up then -1
+      when down then 1
+      else 0
 
-  list: (relationship) ->
-    evaluated = \
-    if relationship
-      @numbers                                 #G
-      .map(asObject)                           #G
-      .filter(relationshipIs relationship)     #G
-      .evaluate()                              #G
-    else
-      @numbers                                 #G
-      .map(asObject)                           #G
-      .evaluate()                              #G
+move = (paddle) ->
+  (moves) ->
+    for displacement in moves
+      paddle.move displacement
 
-    print(asString data for data in evaluated)
+keys = (expected) ->
+  (pressed) ->
+    pressed.keyCode in expected
 
-  get: (name) ->
-    evaluated = \
-    @numbers                                   #G
-    .map(asObject)                             #G
-    .filter(nameIs name)                       #G
-    .evaluate()                                #G
+lhs = 0
+rhs = document.body.offsetWidth
 
-    print(asString data for data in evaluated)
+paddle1 = new Paddle 0,lhs          #F
+paddle1.keys = [Q,A]                #F
 
+paddle2 = new Paddle 0, rhs - 20    #F
+paddle2.keys = [UP,DOWN]            #F
 
+withEvents(doc, 'keydown')          #G
+.filter(keys paddle1.keys)          #G
+.map(displacement paddle1.keys)     #G
+.drain(move paddle1)                #G
 
-console.log "Phonebook. Commands are get, list and exit."
-
-process.stdin.setEncoding 'utf8'
-stdin = process.openStdin()
-
-phonebook = new PhoneBook 'phone_numbers.csv'
-
-stdin.on 'data', (chunk) ->                           #H
-  args = chunk.split ' '                              #H
-  command = args[0].trim()                            #H
-  name = relationship = args[1].trim() if args[1]     #H
-  console.log switch command                          #H
-    when 'get'                                        #H
-      phonebook.get name                              #H
-    when 'list'                                       #H
-      phonebook.list relationship                     #H
-    when 'exit'                                       #H
-      process.exit 1                                  #H
-    else 'Unknown command'                            #H
-
+withEvents(doc, 'keydown')          #G
+.filter(keys paddle2.keys)          #G
+.map(displacement paddle2.keys)     #G
+.drain(move paddle2)                #G

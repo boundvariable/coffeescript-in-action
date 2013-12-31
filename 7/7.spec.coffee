@@ -1,3 +1,4 @@
+assert = require 'assert'
 
 {it, stub, describe} = require 'chromic'
 
@@ -72,13 +73,13 @@ describe 'Chapter 7', ->
     inactive.shouldBe 'komodos'
 
   it 'should demonstrate destructuring toggler', ->
-    make_toggler = (a, b) ->
+    makeToggler = (a, b) ->
       -> [a,b] = [b,a]
 
-    toggler = make_toggler 'on', 'off'
+    toggler = makeToggler 'on', 'off'
 
-    toggler().should_be ['off', 'on']
-    toggler().should_be ['on', 'off']
+    toggler().shouldBe ['off', 'on']
+    toggler().shouldBe ['on', 'off']
 
   it 'should show array destructuring array', ->
     relegate = (team) -> "#{team.name} got relegated"
@@ -194,10 +195,8 @@ describe 'Chapter 7', ->
         first: 'Haveno'
         middle: 'Contact'
         last: 'Details'
-    try
-      s = user.contact.phone.home
-    catch e
-      s.shouldBe 'unchanged'
+
+  assert.throws -> user.contact.phone.home
 
   it 'should show null soak preventing view error', ->
     render = (user) ->
@@ -211,7 +210,7 @@ describe 'Chapter 7', ->
         first: 'Donot'
         last: 'Callme'
 
-    render(user: null).should_be """
+    render(user: null).shouldBe """
     <html>
     Home phone for undefined: undefined
     """
@@ -255,17 +254,17 @@ describe 'Chapter 7', ->
 
     (typeof daffy).should_be 'object'
 
-    (daffy instanceof Duck).should_be true
+    (daffy instanceof Duck).shouldBe true
 
     duck = new Duck
-    ultra_duck_marathon = new DuckRace [duck]
+    ultraDuckMarathon = new DuckRace [duck]
 
-    turn_duck_into_something_else = ->
+    turnDuckIntoSomethingElse = ->
       duck.walk = null
 
-    turn_duck_into_something_else duck
+    turnDuckIntoSomethingElse duck
 
-    #ultra_duck_marathon.go()
+    assert.throws -> ultraDuckMarathon.go()
     # TypeError: Property walk of object #<AsianDuck> is not a function
 
 
@@ -274,16 +273,16 @@ describe 'Chapter 7', ->
     a = new A
     A:: = class Y
 
-    (a instanceof A).should_be false
+    (a instanceof A).shouldBe false
 
   it 'should show map', ->
     paid = [10, 50, 200]
 
     taxes = (price*0.1 for price in paid)
-    taxes.should_be [1, 5, 20]
+    taxes.shouldBe [1, 5, 20]
 
     taxes = paid.map (item) -> item*0.1
-    taxes.should_be [1, 5, 20]
+    taxes.shouldBe [1, 5, 20]
 
   it 'should show filter', ->
     friends = [
@@ -296,7 +295,7 @@ describe 'Chapter 7', ->
     filter = friends.filter (friend) -> friend.location is 'CoffeeVille'
     comprehension = (friend for friend in friends when friend.location is 'CoffeeVille')
 
-    filter.should_be comprehension
+    filter.shouldBe comprehension
 
   it 'should show reduce', ->
     friends = [
@@ -311,7 +310,7 @@ describe 'Chapter 7', ->
     owing = (initial, friend) ->
       if initial.owes then initial.owes + friend.owes
 
-    owed.should_be friends.reduce owing
+    owed.shouldBe friends.reduce owing
 
 
   it 'should show creating function in comprehension', ->
@@ -322,7 +321,7 @@ describe 'Chapter 7', ->
       greetings[person] = ->
         "My name is #{person}"
 
-    greetings.bill().should_be 'My name is ted'
+    greetings.bill().shouldBe 'My name is ted'
 
   it 'should show do -> form inside comprehension', ->
     people = [ 'bill', 'ted' ]
@@ -334,12 +333,12 @@ describe 'Chapter 7', ->
         greetings[name] = ->
           "My name is #{name}"
 
-    greetings.bill().should_be 'My name is bill'
+    greetings.bill().shouldBe 'My name is bill'
 
     greetings = {}
     people.forEach (name) ->
       greetings[name] = -> "My name is #{name}"
-    greetings.bill().should_be 'My name is bill'
+    greetings.bill().shouldBe 'My name is bill'
 
   it 'should demonstrate using', ->
     using = (object, fn) -> fn.apply object
@@ -397,4 +396,4 @@ describe 'Chapter 7', ->
     .rotate(90)
     .forward(4)
 
-    turtle.position.should_be [4,2]
+    turtle.position.shouldBe [4,2]

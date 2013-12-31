@@ -8,7 +8,9 @@ fact = (description, fn) ->                       #B
     fn()                                          #B
     console.log "#{description}: OK"              #B
   catch e                                         #B
-    console.log "#{description}: \n#{e.stack}"    #B
+    console.error "#{description}: "              #B
+    throw e                                       #B
+
 
 fact "addWord adds a word", ->
   input = "product special"

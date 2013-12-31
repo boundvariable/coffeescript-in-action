@@ -1,3 +1,6 @@
+fs = require 'fs'
+coffee = require 'coffee-script'
+
 test = (file) ->
   fs.readFile file, 'utf-8', (err, data) ->
     it = """

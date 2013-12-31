@@ -1,0 +1,23 @@
+{
+  "name": "coffeescript-in-action",
+  "version": "1.0.0",
+  "description": "Source code for the Manning Book CoffeeScript in Action",
+  "main": "index.js",
+  "scripts": {
+    "test": "cake spec"
+  },
+  "dependencies": {
+    "jsdom": "0.8.x",
+    "coffee-script": "1.6.x",
+    "chromic": "0.0.x"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/boundvariable/coffeescript-in-action.git"
+  },
+  "author": "Patrick Lee",
+  "license": "BSD-2-Clause",
+  "bugs": {
+    "url": "https://github.com/boundvariable/coffeescript-in-action/issues"
+  }
+}

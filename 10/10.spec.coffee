@@ -1,8 +1,8 @@
-chapter11 = require './11'
+chapter11 = require './10'
 
 {it, stub, describe} = require 'chromic'
 
-describe 'Chapter 11', ->
+describe 'chapter 10', ->
 
   it 'should show that require.assert has an ok method', ->
     assert = require 'assert'
@@ -103,7 +103,7 @@ describe 'Chapter 11', ->
       scene(double).shouldBe 'Scene completed'
 
 
-  describe 'extract_data', ->
+  describe 'extractData', ->
     extractData = (topic, http, callback) ->
       options =
         host: 'www.agtronsemporium.com'
@@ -152,5 +152,3 @@ describe 'Chapter 11', ->
 
       dependencies = {database, permissions, http, user}
       visits(dependencies).shouldBe 'private'
-
-

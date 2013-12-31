@@ -5,21 +5,21 @@
 describe 'Comments', ->
   it 'should post a comment to the server', ->
     requested = false
-    http_request = (url) -> requested = url
-    comments = new Comments 'http://the-url', {}, http_request
+    httpRequest = (url) -> requested = url
+    comments = new Comments 'http://the-url', {}, httpRequest
 
     comment = 'Hey Agtron. Nice site.'
     comments.post comment
 
-    requested.should_be "http://the-url/comments?insert=#{comment}"
+    requested.shouldBe "http://the-url/comments?insert=#{comment}"
 
   it 'should fetch the comments when constructed', ->
     requested = false
-    http_request = (url) -> requested = url
+    httpRequest = (url) -> requested = url
 
-    comments = new Comments 'http://the-url', {}, http_request
+    comments = new Comments 'http://the-url', {}, httpRequest
 
-    requested.should_be "http://the-url/comments"
+    requested.shouldBe "http://the-url/comments"
 
   it 'should bind to event on the element', ->
     comments = new Comments 'http://the-url', {}, ->
@@ -29,20 +29,18 @@ describe 'Comments', ->
       value: 'A comment from Scruffy'
 
     comments.bind element, 'post'
-    post_received = false
-    comments.post = (comment) -> post_received = comment
+    postReceived = false
+    comments.post = (comment) -> postReceived = comment
 
     element.onpost()
 
-    post_received.should_be element.value
+    postReceived.shouldBe element.value
 
   it 'should render comments to the page as a list', ->
-    out = innerHTML: (content) -> rendered_content = content
+    out = innerHTML: (content) -> renderedContent = content
 
     comments = new Comments 'http://the-url', out, ->
 
     comments.render '["One", "Two", "Three"]'
 
-    out.innerHTML.should_be "<ul><li>One</li><li>Two</li><li>Three</li></ul>"
-
-
+    out.innerHTML.shouldBe "<ul><li>One</li><li>Two</li><li>Three</li></ul>"

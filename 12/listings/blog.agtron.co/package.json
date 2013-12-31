@@ -1,0 +1,14 @@
+{
+  "name": "blog.agtron.co",
+  "version": "1.0.0",
+  "description": "Agtron's blog",
+  "main": "index.js",
+  "scripts": {
+    "test": "cake test"
+  },
+  "dependencies": {
+    "chromic": "0.0.x"
+  },
+  "author": "You",
+  "license": "BSD-2-Clause"
+}

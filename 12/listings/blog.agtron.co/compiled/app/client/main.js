@@ -6,7 +6,9 @@
     http = new XMLHttpRequest;
     http.open('POST', url, true);
     http.onreadystatechange = function() {
-      if (http.readyState === 4) return callback(http.responseText);
+      if (http.readyState === 4) {
+        return callback(http.responseText);
+      }
     };
     return http.send();
   };

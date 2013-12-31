@@ -1,9 +1,8 @@
 (function() {
-  var Comments;
-  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+  var Comments,
+    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
   Comments = (function() {
-
     function Comments(url, out, http_request) {
       this.url = url;
       this.out = out;
@@ -17,8 +16,8 @@
     };
 
     Comments.prototype.bind = function(element, event) {
-      var comment;
-      var _this = this;
+      var comment,
+        _this = this;
       comment = element.querySelector('textarea');
       return element["on" + event] = function() {
         _this.post(comment.value);
