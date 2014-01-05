@@ -8,11 +8,11 @@ window.onload = ->                                  #A
     status.innerHTML = buffer[buffer.length-1]    #B
 
   nextCallbackId = do ->
-      callbackId = 0
+    callbackId = 0
     -> callbackId = callbackId + 1
 
   nextCallbackName = ->
-      "callback#{nextCallbackId()}"
+    "callback#{nextCallbackId()}"
 
   fetch = (src, callback) ->                                #C
     head = document.querySelector 'head'                    #C
@@ -36,7 +36,7 @@ window.onload = ->                                  #A
                                                          #D
     ->                                                   #D
       window.setInterval ->                              #D
-        fetch '/server-status.js', bufferRenderer        #D
+        fetch '/feed.json', bufferRenderer               #D
       , framesPerSecond 20                               #D
 
    updater = makeUpdater()

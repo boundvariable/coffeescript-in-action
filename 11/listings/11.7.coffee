@@ -65,23 +65,24 @@ Cézanne = do ->
   RawUmber: '#826644'
   Viridian: '#40826d'
 
-  createScene: (id) ->
+  createScene: (selector) ->
     scene = Object.create scenePrototype
-    node = document.querySelector id
+    node = document.querySelector selector
     scene.canvas = document.createElement 'canvas'
     scene.context = scene.canvas.getContext '2d'
     node.appendChild scene.canvas
     scene.startClock()
     scene
 
-scene = Cézanne
-.createScene('#scene')
-.size(400, 400)
+window.onload = ->
+  scene = Cézanne
+  .createScene('#status')
+  .size(400, 400)
 
-circle = scene
-.createCircle()
-.radius(10)
-.color(Cézanne.RawUmber)
-.position(20, 20)
+  circle = scene
+  .createCircle()
+  .radius(10)
+  .color(Cézanne.RawUmber)
+  .position(20, 20)
 
-circle.animatePosition 360, 360, 2
+  circle.animatePosition 360, 360, 2

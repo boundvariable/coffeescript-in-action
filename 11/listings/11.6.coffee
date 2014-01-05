@@ -1,7 +1,9 @@
 window.onload = ->
-  graph = document.querySelector '#graph'
+  status = document.querySelector '#status'
+  graph = document.createElement 'canvas'
   graph.width = window.innerWidth
   graph.height = window.innerHeight
+  status.appendChild graph
   context = graph.getContext '2d'
 
   render = (buffer) ->
@@ -43,7 +45,7 @@ window.onload = ->
     head.appendChild script
 
   window.setInterval ->
-    fetch '/server-data.js', (json) ->
+    fetch '/feed.json', (json) ->
       render ->
         buffer.push (JSON.parse json).hits
         if buffer.length is graph.width then buffer.shift()

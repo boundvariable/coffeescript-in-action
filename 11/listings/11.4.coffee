@@ -1,5 +1,5 @@
 window.onload = ->
-    status = document.querySelector '#status'
+  status = document.querySelector '#status'
 
   ensureBars = (number) ->                                          #A
     unless (document.querySelectorAll '.bar').length >= number      #A
