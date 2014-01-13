@@ -4,7 +4,14 @@ fs = require 'fs'
 
 buildUtilities = require './build_utilities'  #A
 
-{ clean, compile, copy, createArtifact, runSpecs, runApp } = buildUtilities.fromDir './'
+{
+clean,
+compile,
+copy,
+createArtifact,
+runSpecs,
+runApp
+} = buildUtilities.fromDir './'
 
 VERSION = fs.readFileSync('./VERSION', 'utf-8')   #B
 
@@ -33,14 +40,21 @@ SERVER = require('./app/config').production.host
 
 deploy = ->
   console.log "Deploy..."
-  execFile "tar", ["-cvf", "artifact.#{VERSION}.tar", "compiled"], (err, data) ->
+  tarOptions = ["-cvf", "artifact.#{VERSION}.tar", "compiled"]
+  execFile "tar", tarOptions, (err, data) ->
     console.log '1. Created artifact'
     execFile 'scp', [
       "artifact.#{VERSION}.tar",
       "#{SERVER}:~/."
     ], (err, data) ->
       console.log '2. Uploaded artifact'
-      exec "ssh #{SERVER} 'cd ~/;rm -rf compiled;tar -xvf artifact.#{VERSION}.tar;cd ~/compiled;NODE_ENV=production node app/server.js &' &", (err, data) ->
+      exec """
+      ssh #{SERVER} 'cd ~/;
+      rm -rf compiled;
+      tar -xvf artifact.#{VERSION}.tar;
+      cd ~/compiled;
+      NODE_ENV=production nohup node app/server.js &' &
+      """, (err, data) ->
         console.log '3. Started server'
         console.log 'Done'
 
