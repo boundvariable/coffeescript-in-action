@@ -1,0 +1,156 @@
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+    vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+    display: block;
+}
+body {
+    line-height: 1;
+}
+ol, ul {
+    list-style: none;
+}
+blockquote, q {
+    quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+    content: '';
+    content: none;
+}
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+h1 {
+    font-family: "Andale Mono", AndaleMono, monospace;
+    font-weight: 700;
+    font-size: 3em;
+    margin: 0 0 1em 0;
+}
+
+.page {
+    width: 50em;
+    margin: 1em auto;
+}
+
+.product, .camera, .skateboard {
+    font-family: "Andale Mono", AndaleMono, monospace;
+    margin: 1em;
+    width: 10em;
+    height: 10em;
+    text-align:center;
+    float:left;
+    cursor:pointer;
+    line-height:1.4;
+}
+
+.l55 .product {
+    text-align: left;
+    width: 40em;
+    height: 11em;
+    clear: left;
+    background: url("/images/product.png") bottom left no-repeat;
+    background-size: 10em auto;
+    padding: 1em 0 0 0;
+}
+
+.product .info {
+    display: none;
+}
+
+.product dl.info dt {
+    margin-top: 1em;
+}
+
+.product:hover {
+    background: none;
+}
+
+.product:hover .info {
+    display: block;
+    font-size: 0.8em;
+}
+
+.camera, .l55 .camera {
+    background: url("/images/camera.png") bottom left no-repeat;
+    background-size: 10em auto;
+}
+
+.l55 .product:hover {
+    background: url("/images/product.png") bottom left no-repeat;
+    background-size: 10em auto;
+}
+
+.l55 .camera:hover {
+    background: url("/images/camera.png") bottom left no-repeat;
+    background-size: 10em auto;
+}
+
+.camera .gallery {
+    float: left;
+    display: block;
+    width: 40em;
+    margin: 3em 0 0 15em;
+}
+
+.camera .gallery li {
+    float: left;
+    display: block;
+    margin: 0 1em 0 0;
+}
+
+.camera .gallery img {
+    height: 6.3em;
+    float: left;
+    display: block;
+}
+
+.skateboard {
+    background: url("/images/skateboard.png") bottom left no-repeat;
+    background-size: 100% auto;
+}
+
+.search {
+    font-family: "Andale Mono", AndaleMono, monospace;
+    font-size: 2em;
+    font-weight: 700;
+    margin-bottom: 2em;
+    padding-left: 3em;
+}
+
+.search input#search {
+    font-family: "Andale Mono", AndaleMono, monospace;
+    font-size: 1em;
+    font-weight: 700;
+    border: none;
+    border-bottom: 3px dashed #000;
+    width: 12em;
+}
+
+.search #go {
+    font-family: "Andale Mono", AndaleMono, monospace;
+    font-size: 1em;
+    background: #fff;
+    border: 2px solid #000;
+}
