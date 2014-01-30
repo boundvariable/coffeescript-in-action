@@ -59,8 +59,8 @@ server = http.createServer (req, res) ->
       res.end JSON.stringify data                  #E
     when '/json/list/camera'                       #E
       headers res, 200, 'json'                     #E
-      cameras = data.camera                        #E
-      res.end JSON.stringify data.camera           #E
+      camera = data.camera                         #E
+      res.end JSON.stringify camera                #E
     when '/json/news'                              #E
       headers res, 200, 'json'                     #E
       res.end JSON.stringify news                  #E
