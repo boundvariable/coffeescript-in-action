@@ -25,3 +25,20 @@ class Formulaic
 
   notify: ->
     subscriber() for subscriber in @subscribers
+
+
+
+# test
+element =
+  getElementsByTagName: ->
+    [{name: 'a', value: 1}, {name: 'b', value: 2}]
+
+root =
+  querySelector: ->
+    element
+
+http = {}
+
+f = new Formulaic root, '#x', http
+
+console.log JSON.stringify(f)
