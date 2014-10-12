@@ -23,7 +23,7 @@ class Product
     @info = info                                          #C
     @view = document.createElement 'div'                  #C
     @view.className = "product #{@purchaseCategory}"      #C
-    document.body.appendChild @view                       #C
+    document.querySelector('.page').appendChild @view                       #C
     @view.onclick = =>                                    #C
       @purchase()                                         #C
     @render()                                             #C
