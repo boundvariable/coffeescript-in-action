@@ -34,7 +34,7 @@ class Product
     @view.innerHTML = "#{@name} #{displayInfo.join ''}"                #D
   purchase: ->                                                         #D
     if @info.stock > 0                                                 #D
-      post "/json/purchase/#{@purchase_category}/#{@name}", (res) =>   #D
+      post "/json/purchase/#{@purchaseCategory}/#{@name}", (res) =>   #D
         if res.status is "success"                                     #D
           @info = res.update                                           #D
           @render()                                                    #D
