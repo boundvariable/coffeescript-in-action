@@ -63,6 +63,7 @@ h1 {
     float:left;
     cursor:pointer;
     line-height:1.4;
+    word-break: break-word;
 }
 
 .l55 .product {
