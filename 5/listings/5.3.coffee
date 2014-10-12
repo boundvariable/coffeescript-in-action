@@ -29,7 +29,7 @@ class Product
     @render()                                             #C
   render: ->
     renderInfo = (key,val) ->
-      "<div>#{key}: #{val}</div>"
+      "<div class='info'>#{key}: #{val}</div>"
     displayInfo = (renderInfo(key, val) for own key, val of @info)     #D
     @view.innerHTML = "#{@name} #{displayInfo.join ''}"                #D
   purchase: ->                                                         #D
