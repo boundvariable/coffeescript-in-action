@@ -22,19 +22,19 @@ class Product
     @name = name                                          #C
     @info = info                                          #C
     @view = document.createElement 'div'                  #C
-    @view.className = "product"                           #C
-    document.body.appendChild @view                       #C
+    @view.className = "product #{@purchaseCategory}"      #C
+    document.querySelector('.page').appendChild @view                       #C
     @view.onclick = =>                                    #C
       @purchase()                                         #C
     @render()                                             #C
   render: ->
     renderInfo = (key,val) ->
-      "<div>#{key}: #{val}</div>"
+      "<div class='info'>#{key}: #{val}</div>"
     displayInfo = (renderInfo(key, val) for own key, val of @info)     #D
     @view.innerHTML = "#{@name} #{displayInfo.join ''}"                #D
   purchase: ->                                                         #D
     if @info.stock > 0                                                 #D
-      post "/json/purchase/#{@purchase_category}/#{@name}", (res) =>   #D
+      post "/json/purchase/#{@purchaseCategory}/#{@name}", (res) =>   #D
         if res.status is "success"                                     #D
           @info = res.update                                           #D
           @render()                                                    #D
