@@ -44,7 +44,7 @@ class Product
     @view.innerHTML = @template()
   purchase: ->
     if @info.stock > 0
-      post "/json/purchase/#{@purchaseCategory}/#{@name}", (res) =>
+      post "/json/purchase/#{@category}/#{@name}", (res) =>
         if res.status is "success"
           @info = res.update
           @render()
