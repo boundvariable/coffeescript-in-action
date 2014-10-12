@@ -22,7 +22,7 @@ class Product
     @name = name                                          #C
     @info = info                                          #C
     @view = document.createElement 'div'                  #C
-    @view.className = "product"                           #C
+    @view.className = "product #{@purchaseCategory}"      #C
     document.body.appendChild @view                       #C
     @view.onclick = =>                                    #C
       @purchase()                                         #C
