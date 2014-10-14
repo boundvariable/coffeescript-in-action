@@ -21,7 +21,7 @@ initialize = (ranked) ->         #E
   insert ranked...               #E
   first = ranked.slice 0, 1      #E
   rest = ranked.slice 1          #E
-  highlight first, rest...
+  highlight ranked...
 
 window.onload = ->    #F
   initialize [        #F
