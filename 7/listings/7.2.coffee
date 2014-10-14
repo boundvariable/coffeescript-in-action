@@ -22,8 +22,7 @@ makeCompetition = ({max, sort}) ->       #A
   rank = (unranked) ->                        #B
     unranked.sort(sort).slice(0, max)         #B
 
-
-  initialize: (unranked) ->
+  initialize = (unranked) ->
     ranked = rank unranked
     insert ranked...
     highlight ranked...
