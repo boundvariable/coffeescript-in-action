@@ -26,9 +26,7 @@ makeCompetition = ({max, sort}) ->       #A
   initialize: (unranked) ->
     ranked = rank unranked
     insert ranked...
-    first = ranked.slice(0, 1)[0]
-    rest = ranked.slice 1
-    highlight first, rest...
+    highlight ranked...
 
   { initialize }
 
