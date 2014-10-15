@@ -58,14 +58,13 @@ listing = (id) ->
 
 routes = {}
 
-for n in [1..6]
+for n in [1..4]
   do ->
     listingNumber = n
     routes["/#{listingNumber}"] = (res) ->
       render res, listing(listingNumber).head, listing(listingNumber).body
     routes["/#{listingNumber}.js"] = (res) ->
       script res, listingNumber
-
 
 server = http.createServer (req, res) ->
   handler = routes[req.url] or (res) ->

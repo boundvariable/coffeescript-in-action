@@ -86,9 +86,7 @@ makeCompetition = ({max, sort}) ->
     ranked = rank scored
     console.log ranked
     insert ranked...
-    first = ranked.slice(0, 1)[0]
-    rest = ranked.slice 1
-    highlight first, rest...
+    highlight ranked...
 
   { run }
 

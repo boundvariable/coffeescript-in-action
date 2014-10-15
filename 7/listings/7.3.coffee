@@ -29,13 +29,10 @@ makeCompetition = ({max, sort}) ->
   rank = (unranked) ->
     unranked.sort(sort).slice(0, max).reverse()
 
-
   initialize: (unranked) ->
     ranked = rank unranked
     insert ranked...
-    first = ranked.slice(0, 1)[0]
-    rest = ranked.slice 1
-    highlight first, rest...
+    highlight ranked...
 
 sortOnPoints = (a, b) ->
   a.points > b.points
