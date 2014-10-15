@@ -58,7 +58,7 @@ listing = (id) ->
 
 routes = {}
 
-for n in [1..6]
+for n in [1..4]
   do ->
     listingNumber = n
     routes["/#{listingNumber}"] = (res) ->
