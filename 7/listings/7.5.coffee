@@ -66,7 +66,6 @@ for n in [1..4]
     routes["/#{listingNumber}.js"] = (res) ->
       script res, listingNumber
 
-
 server = http.createServer (req, res) ->
   handler = routes[req.url] or (res) ->
     render res, '', '''
