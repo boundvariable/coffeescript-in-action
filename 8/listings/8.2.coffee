@@ -7,11 +7,11 @@ class Email
   constructor: ({@to, @from, @subject, @body}) ->
   send: ->
     client = simplesmtp.connect SMTP_PORT, SMTP_SERVER
-    client.once 'idle', ->
+    client.once 'idle', =>
       client.useEnvelope
         from: @from
         to: @to
-    client.on 'message', ->
+    client.on 'message', =>
       client.write """
       From: #{@from}
       To: #{@to}
