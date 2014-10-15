@@ -29,7 +29,6 @@ makeCompetition = ({max, sort}) ->
   rank = (unranked) ->
     unranked.sort(sort).slice(0, max).reverse()
 
-
   initialize: (unranked) ->
     ranked = rank unranked
     insert ranked...
