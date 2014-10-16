@@ -6,18 +6,18 @@ class Email
   SMTP_SERVER = 'coffeescriptinaction.com'
   constructor: (options) ->
     ['from', 'to', 'subject', 'body'].forEach (key) =>
-      @["_{key}"] = options?[key]
+      @["_#{key}"] = options?[key]
       @[key] = (newValue) -> 
         @["_#{key}"] = newValue
         @
 
   send: ->
     client = simplesmtp.connect SMTP_PORT, SMTP_SERVER
-    client.once 'idle', ->
+    client.once 'idle', =>
       client.useEnvelope
         from: @_from
         to: @_to
-    client.on 'message', ->
+    client.on 'message', =>
       client.write """
       From: "#{@_from}"
       To: #{@_to}
