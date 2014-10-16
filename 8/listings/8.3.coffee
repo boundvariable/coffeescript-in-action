@@ -13,11 +13,11 @@ class Email
 
   send: ->
     client = simplesmtp.connect SMTP_PORT, SMTP_SERVER
-    client.once 'idle', ->
+    client.once 'idle', =>
       client.useEnvelope
         from: @_from
         to: @_to
-    client.on 'message', ->
+    client.on 'message', =>
       client.write """
       From: "#{@_from}"
       To: #{@_to}
