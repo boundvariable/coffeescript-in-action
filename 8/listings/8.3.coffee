@@ -6,7 +6,7 @@ class Email
   SMTP_SERVER = 'coffeescriptinaction.com'
   constructor: (options) ->
     ['from', 'to', 'subject', 'body'].forEach (key) =>
-      @["_{key}"] = options?[key]
+      @["_#{key}"] = options?[key]
       @[key] = (newValue) -> 
         @["_#{key}"] = newValue
         @
