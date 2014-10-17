@@ -14,7 +14,7 @@ readFileAsArray = (file, delimiter, callback) ->
 lastName = (s) ->
   s.split(/\s+/g)[1].replace /,/, ','
 
-decorateSortUndecorate = (array, sort_rule) ->
+decorateSortUndecorate = (array, sortRule) ->
   decorate = (array) ->
     {original: item, sortOn: sortRule item} for item in array
 
