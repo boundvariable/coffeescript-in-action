@@ -8,7 +8,7 @@ readFile = (file, strategy) ->
 
 readFileAsArray = (file, delimiter, callback) ->
   asArray = (data) ->
-    callback data.split(delimiter).slice(0,-1)
+    callback data.split(delimiter)
   readFile(file, asArray)
 
 lastName = (s) ->

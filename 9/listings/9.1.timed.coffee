@@ -8,7 +8,7 @@ readFile = (file, strategy) ->
 
 readFileAsArray = (file, delimiter, callback) ->     #A
   asArray = (data) ->                                #A
-    callback data.split(delimiter).slice(0,-1)       #A
+    callback data.split(delimiter)                   #A
   readFile(file, asArray)                            #A
 
 compareOnLastName = (a,b) ->                   #B
