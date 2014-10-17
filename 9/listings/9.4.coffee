@@ -21,10 +21,10 @@ withEvents = (emitter, event) ->
     data.push datum              #C
 
   filter: (filter) ->                 #D
-    pipeline.push {filter: filter}    #D
+    pipeline.push {filter}            #D
     @                                 #D
   map: (map) ->                       #D
-    pipeline.push {map: map}          #D
+    pipeline.push {map}               #D
     @                                 #D
   evaluate: ->                        #D
     result = run()                    #D
