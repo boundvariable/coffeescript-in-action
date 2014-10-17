@@ -8,13 +8,13 @@ readFile = (file, strategy) ->
 
 readFileAsArray = (file, delimiter, callback) ->
   asArray = (data) ->
-    callback data.split(delimiter).slice(0,-1)
+    callback data.split(delimiter)
   readFile(file, asArray)
 
 lastName = (s) ->
   s.split(/\s+/g)[1].replace /,/, ','
 
-decorateSortUndecorate = (array, sort_rule) ->
+decorateSortUndecorate = (array, sortRule) ->
   decorate = (array) ->
     {original: item, sortOn: sortRule item} for item in array
 
@@ -30,7 +30,6 @@ decorateSortUndecorate = (array, sort_rule) ->
   decorated = decorate array
   sorted = decorated.sort comparator
   undecorate sorted
-
 
 sortedCompetitorsFromFile = (fileName, callback) ->
   newline = /\n/gi
