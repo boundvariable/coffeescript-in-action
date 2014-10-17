@@ -31,7 +31,6 @@ decorateSortUndecorate = (array, sortRule) ->
   sorted = decorated.sort comparator
   undecorate sorted
 
-
 sortedCompetitorsFromFile = (fileName, callback) ->
   newline = /\n/gi
   readFileAsArray fileName, newline, (array) ->
