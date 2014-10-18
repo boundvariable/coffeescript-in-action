@@ -24,10 +24,10 @@ window.onload = ->                                  #A
     head.appendChild script                                 #C
 
   seconds = (n) ->
-      1000*n
+    1000*n
 
   framesPerSecond = (n) ->
-      (seconds 1)/n
+    (seconds 1)/n
 
   makeUpdater = (buffer = []) ->                         #D
     bufferRenderer = (json) ->                           #D
