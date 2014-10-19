@@ -10,7 +10,9 @@ window.onload = ->
 
   drawTitle = (title) ->
     context.font = 'italic 20px sans-serif'
-    context.fillText title
+    context.fillStyle = '#fff'
+    context.textAlign = 'center'
+    context.fillText title, 320, 35
 
   drawGraph = (buffer) ->
     canvas.width = canvas.width              #A
