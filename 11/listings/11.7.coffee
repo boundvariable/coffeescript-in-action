@@ -27,7 +27,6 @@ Cézanne = do ->
       for n in [1..frameCount]
         if n is frameCount
           do =>
-            frame = n
             @frames.unshift =>
               @position x, y
         else
