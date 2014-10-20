@@ -43,12 +43,15 @@ window.onload = ->
 
   fetch = (src, callback) ->
     head = document.querySelector 'head'
-    script = document.createElement 'script'
+    newScript = document.createElement 'script'
+    newScript.id = 'json-p'
     ajaxCallbackName = nextCallbackName()
     window[ajaxCallbackName] = (data) ->
       callback data
-    script.src = src + "?callback=#{ajaxCallbackName}"
-    head.appendChild script
+    newScript.src = src + "?callback=#{ajaxCallbackName}"
+    lastScript = document.getElementById 'json-p'
+    head.removeChild lastScript if lastScript?
+    head.appendChild newScript
 
   seconds = (n) ->
     1000*n
