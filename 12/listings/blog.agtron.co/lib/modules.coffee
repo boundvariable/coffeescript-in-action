@@ -8,9 +8,8 @@ do ->                 #A
     if modules[name]
       module = exports: {}
       cache[name] = module
-      modules[name]((name) ->
-        require name
-      , module.exports)
+      modules[name]((name) =>
+        @require name, module.exports)
       module.exports
     else throw "No such module #{name}"
 
