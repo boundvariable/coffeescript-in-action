@@ -64,7 +64,7 @@ exports.fromDir = (root) ->
       callback?()
 
   runApp = (env) ->
-    exec 'NODE_ENV=#{env} nohup node compiled/app/server.js &', ->
+    exec "NODE_ENV=#{env} nohup node compiled/app/server.js &", ->
       console.log "Running..."
 
   {clean, compile, copy, createArtifact, runSpecs, runApp}

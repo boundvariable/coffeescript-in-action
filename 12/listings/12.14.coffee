@@ -20,7 +20,7 @@ task 'build:client', 'build client side stuff with modules', ->
 
   out = modules + '\n\n' + source
   fs.writeFileSync 'compiled/app/client/application.js'   #F
-#A lib/modules.coffee contains the code from listing 13.13
+#A lib/modules.coffee contains the code from listing 12.13
 #B CoffeeScript is compiled bare. Meaning that there is no outer function wrapper
 #C As this is in the build where you don’t care about blocking - readFileSync is acceptable.
 #D The actual file output is the compiled CoffeeScript wrapped in the defmodule call.
